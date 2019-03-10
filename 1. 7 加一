@@ -1,0 +1,37 @@
+# My code
+class Solution:
+    def plusOne(self, digits: List[int]) -> List[int]:
+        new_digits = []
+        count = 0
+        temp = 0
+        k = len(digits)
+        for i in range(k) :
+            count += digits[i] * pow(10, k-i-1)
+        count += 1
+        if count == pow(10, k):
+            new_digits.append(1)
+            for j in range(1, k+1):
+                new_digits.append(0)
+        else :
+            for j in range(k) :
+                temp = count // (pow(10, k-j-1))
+                new_digits.append(temp)
+                count -= temp * pow(10, k-j-1)
+        return new_digits
+            
+
+# 利用字符串
+return  [int(i) for i in str(int(''.join([str(i) for i in digits]))+1)]
+            
+
+
+# 递归
+if len(digits) == 0:
+            digits = [1]
+        elif digits[-1] == 9:
+            digits = self.plusOne(digits[:-1])
+            digits.extend([0])
+        else:
+            digits[-1] += 1
+        return digits
+          
