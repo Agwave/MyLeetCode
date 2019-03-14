@@ -1,0 +1,22 @@
+class Solution:
+    def rotate(self, matrix: List[List[int]]) -> None:
+        """
+        Do not return anything, modify matrix in-place instead.
+        """
+        length = 0
+        length = len(matrix)
+        # 转置
+        for i in range(length):
+            for j in range(i+1, length):
+                temp = matrix[i][j]
+                matrix[i][j] = matrix[j][i]
+                matrix[j][i] = temp
+            # 每一行逆过来
+            matrix[i] = matrix[i][::-1]
+            
+            
+         
+# 利用 zip 和 map
+# 直接使用zip()实现转置但是zip()之后的类型为元组，再map()一下方可得到数组
+matrix[:] = map(list,zip(*matrix[::-1]))
+         
