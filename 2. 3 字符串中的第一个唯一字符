@@ -1,0 +1,29 @@
+# 自己的解答
+class Solution:
+    def firstUniqChar(self, s: str) -> int:
+        # 利用字典进行重复次数的计数
+        s_dict = {}
+        for i in range(len(s)) :
+            if s[i] in s_dict :
+                s_dict[s[i]] += 1
+            else :
+                s_dict[s[i]] = 1
+        # 遍历字符串
+        for i in range(len(s)) :
+            if s_dict[s[i]] == 1 :
+                return i
+        return -1
+        
+        
+        
+
+# 参考解答（耗时少）
+class Solution:
+    def firstUniqChar(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        letters='abcdefghijklmnopqrstuvwxyz'
+        index=[s.index(l) for l in letters if s.find(l) != -1 and s.find(l) == s.rfind(l)]
+        return min(index) if len(index) > 0 else -1
