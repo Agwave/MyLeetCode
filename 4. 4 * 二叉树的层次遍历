@@ -77,3 +77,28 @@ class Solution:
                 result.append(layer_values)
             up_layer = next_layer
         return result
+
+
+
+
+# 第一次复习
+class Solution:
+    def levelOrder(self, root: TreeNode) -> List[List[int]]:
+        if root == None:
+            return []
+        List = [[root.val]]
+        layer_roots = [root]
+        while(len(layer_roots) > 0):
+            next_layer_roots = []
+            layer_list = []
+            for root in layer_roots:
+                if root.left:
+                    layer_list.append(root.left.val)
+                    next_layer_roots.append(root.left)
+                if root.right:
+                    layer_list.append(root.right.val)
+                    next_layer_roots.append(root.right)
+            if len(layer_list) > 0:
+                List.append(layer_list)
+            layer_roots = next_layer_roots
+        return List
