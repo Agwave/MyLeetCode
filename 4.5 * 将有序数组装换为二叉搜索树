@@ -65,3 +65,21 @@ class Solution:
         root.left = self.dispart(nums, l, mid-1)
         root.right = self.dispart(nums, mid+1, r)
         return root
+
+
+# 第一次复习
+class Solution:
+    def sortedArrayToBST(self, nums: List[int]) -> TreeNode:
+        if nums == None:
+            return None
+        return self.balance(nums, 0, len(nums)-1)
+    def balance(self, nums, l, r):
+        if l > r:
+            return None
+        if l == r:
+            return TreeNode(nums[l])
+        mid = (l+r)//2
+        root = TreeNode(nums[mid])
+        root.left = self.balance(nums, l, mid-1)
+        root.right = self.balance(nums, mid+1, r)
+        return root
