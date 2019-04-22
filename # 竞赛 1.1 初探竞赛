@@ -1,0 +1,103 @@
+公司计划面试 2N 人。第 i 人飞往 A 市的费用为 costs[i][0]，飞往 B 市的费用为 costs[i][1]。
+
+返回将每个人都飞到某座城市的最低费用，要求每个城市都有 N 人抵达。
+
+ 
+
+示例：
+
+输入：[[10,20],[30,200],[400,50],[30,20]]
+输出：110
+解释：
+第一个人去 A 市，费用为 10。
+第二个人去 A 市，费用为 30。
+第三个人去 B 市，费用为 50。
+第四个人去 B 市，费用为 20。
+
+最低总费用为 10 + 30 + 50 + 20 = 110，每个城市都有一半的人在面试。
+ 
+
+提示：
+
+1 <= costs.length <= 100
+costs.length 为偶数
+1 <= costs[i][0], costs[i][1] <= 1000
+
+
+
+
+
+
+
+
+class Solution:
+    def twoCitySchedCost(self, costs: List[List[int]]) -> int:
+        n = len(costs)
+        subs = [0]*n
+        for i in range(n):
+            subs[i] = costs[i][0] - costs[i][1]
+    
+        subs_copy = subs[:]
+        
+        max_sub = subs_copy[0]
+        for sub in subs_copy:
+            if sub > max_sub:
+                max_sub = sub
+        
+        indexs = [0]*(n//2)
+        for j in range(n//2):
+            min_sub = subs_copy[0]
+            index = 0
+            for i in range(n):
+                if subs_copy[i] < min_sub:
+                    min_sub = subs_copy[i]
+                    index = i
+            indexs[j] = index
+            subs_copy[index] = max_sub
+        
+        total_costs = 0
+        for i in range(n):
+            if i in indexs:
+                total_costs += costs[i][0]
+            else:
+                total_costs += costs[i][1]
+        return total_costs
+
+
+
+
+
+
+# 参考解答
+
+class Solution(object):
+    def twoCitySchedCost(self, costs):
+        """
+        :type costs: List[List[int]]
+        :rtype: int
+        """
+        costs = sorted(costs, key = lambda x: abs(x[0] - x[1]))
+        costs = costs[::-1]
+        a, b = 0, 0 #a, b分别代表目前去A市和去B市的人数
+        n = len(costs) // 2
+        res = 0
+ 
+        for i, cost in enumerate(costs):
+            if a < n and b < n:
+                if cost[0] < cost[1]:
+                    a += 1
+                    res += cost[0]
+                else:
+                    b += 1
+                    res += cost[1]
+            elif a < n: #去B市的人数已经满了，只能去A了
+                a += 1
+                res += cost[0]
+                
+            elif b < n: #去A市的人数已经满了，只能去B了
+                b += 1
+                res += cost[1]
+                
+        return res
+
+
