@@ -1,0 +1,126 @@
+给定一个字符串数组，将字母异位词组合在一起。字母异位词指字母相同，但排列不同的字符串。
+
+示例:
+
+输入: ["eat", "tea", "tan", "ate", "nat", "bat"],
+输出:
+[
+  ["ate","eat","tea"],
+  ["nat","tan"],
+  ["bat"]
+]
+说明：
+
+所有输入均为小写字母。
+不考虑答案输出的顺序。
+
+
+
+
+
+
+
+# 参考解答：用时104ms
+class Solution(object):
+    def groupAnagrams(self, strs):
+        """
+        :type strs: List[str]
+        :rtype: List[List[str]]
+        """
+        dic = {}
+        for str in strs:
+            key = ''.join(sorted(str))
+            if key in dic:
+                dic[key].append( str )
+            else:
+                dic[key] = [str]
+        return list(dic.values())
+
+
+
+
+
+
+# 自答1：用时2400ms
+class Solution:
+    def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
+        dic = {}
+        dic_list = []
+        dic_index = []
+        groups = []
+        group = []
+        
+        for i in range(len(strs)):
+            for s in strs[i]:
+                print(dic)
+                if s not in dic:
+                    dic[s] = 1
+                else:
+                    dic[s] += 1
+            if dic not in dic_list:
+                dic_list.append(dic)
+                dic_index.append([i])
+            else:
+                for j in range(len(dic_list)):
+                    if dic == dic_list[j]:
+                        dic_index[j].append(i)
+                        break 
+            dic = {}
+        # dic_list : [{e:1, a:1, t:1}, {t:1, e:1, a:1}, {b:1, a:1, t:1}]
+        # dic_index : [[0, 1, 3], [2, 4], [5]]
+        print(dic_list)
+        print(dic_index)
+        
+        for indexs in dic_index:
+            for index in indexs:
+                group.append(strs[index])
+            groups.append(group)
+            group = []
+            
+        return groups
+
+
+
+
+
+
+
+# 自答2：用时1200ms
+class Solution:
+    def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
+        dic = {}
+        dics = []
+        dic_list = []
+        dic_index = []
+        groups = []
+        group = []
+        
+        for str in strs:
+            for s in str:
+                if s not in dic:
+                    dic[s] = 1
+                else:
+                    dic[s] += 1
+            dics.append(dic)
+            dic = {}
+        # dics : [{e:1, a:1, t:1}, {t:1, e:1, a:1}, ...]
+        
+        for i in range(len(dics)): 
+            if dics[i] not in dic_list:
+                dic_list.append(dics[i])
+                dic_index.append([i])
+            else:
+                for j in range(len(dic_list)):
+                    if dics[i] == dic_list[j]:
+                        dic_index[j].append(i)
+                        break
+        
+        # dic_list : [{e:1, a:1, t:1}, {t:1, e:1, a:1}, {b:1, a:1, t:1}]
+        # dic_index : [[0, 1, 3], [2, 4], [5]]
+        for indexs in dic_index:
+            for index in indexs:
+                group.append(strs[index])
+            groups.append(group)
+            group = []
+            
+        return groups
