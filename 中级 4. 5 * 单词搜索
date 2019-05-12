@@ -1,0 +1,129 @@
+给定一个二维网格和一个单词，找出该单词是否存在于网格中。
+
+单词必须按照字母顺序，通过相邻的单元格内的字母构成，其中“相邻”单元格是那些水平相邻或垂直相邻的单元格。同一个单元格内的字母不允许被重复使用。
+
+示例:
+
+board =
+[
+  ['A','B','C','E'],
+  ['S','F','C','S'],
+  ['A','D','E','E']
+]
+
+给定 word = "ABCCED", 返回 true.
+给定 word = "SEE", 返回 true.
+给定 word = "ABCB", 返回 false.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 参考解答1：（用时最短）
+class Solution:
+    def exist(self, board, word):
+        """
+        :type board: List[List[str]]
+        :type word: str
+        :rtype: bool
+        """
+        
+        from collections import defaultdict
+        
+        if not word:
+            return True
+        if not board:
+            return False
+        
+        count_dict = defaultdict(int)
+        for i in range(len(word)):
+            count_dict[word[i]] += 1
+        for i in range(len(board)):
+            for j in range(len(board[0])):
+                count_dict[board[i][j]] -= 1
+        for p in count_dict:
+            if count_dict[p] > 0:
+                return False
+        
+        used_board = [[0] * len(board[0]) for _ in range(len(board))]
+        for i in range(len(board)):
+            for j in range(len(board[0])):
+                if board[i][j] == word[0]:
+                    if self.sub_exist(i, j, 0, board, used_board, word):
+                        return True
+
+        return False
+
+
+    def sub_exist(self, i, j, count, board, used_board, word):
+        if board[i][j] == word[count]:
+            if count == len(word)-1:
+                return True
+            else:
+                used_board[i][j] = 1
+                if i > 0 and used_board[i-1][j] == 0:
+                    if self.sub_exist(i-1, j, count+1, board, used_board, word):
+                        return True
+                if i < len(board) - 1 and used_board[i+1][j] == 0:
+                    if self.sub_exist(i+1, j, count+1, board, used_board, word):
+                        return True
+                if j > 0 and used_board[i][j-1] == 0:
+                    if self.sub_exist(i, j-1, count+1, board, used_board, word):
+                        return True
+                if j < len(board[0]) - 1 and used_board[i][j+1] == 0:
+                    if self.sub_exist(i, j+1, count+1, board, used_board, word):
+                        return True
+                used_board[i][j] = 0
+
+        return False
+        
+
+
+
+
+
+
+
+
+
+
+# 参考解答2（代码简单）：
+class Solution:
+    def exist(self, board, word):
+        """
+        :type board: List[List[str]]
+        :type word: str
+        :rtype: bool
+        """
+        #深搜解法
+        if not board:
+            return False
+        #搜索可能的起始位置
+        for i in range(len(board)):
+            for j in range(len(board[0])):
+                if self.dfs(board,word,i,j):
+                    return True
+        return False
+ 
+    def dfs(self,board,word,i,j):
+        #dfs终止条件
+        if len(word) == 0:
+            return True
+        #边界终止条件
+        if i < 0 or i >= len(board) or j < 0 or j >= len(board[0]) or board[i][j] != word[0]:
+            return False
+        #不能搜索到之前的位置，设该位置为None
+        tmp,board[i][j] = board[i][j],None
+        #向上下左右四个方向搜索
+        res = self.dfs(board,word[1:],i-1,j) or self.dfs(board,word[1:],i+1,j) or self.dfs(board,word[1:],i,j-1) or self.dfs(board,word[1:],i,j+1)
+        board[i][j] = tmp
+        return res
