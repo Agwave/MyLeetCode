@@ -1,0 +1,73 @@
+给定一个按照升序排列的整数数组 nums，和一个目标值 target。找出给定目标值在数组中的开始位置和结束位置。
+
+你的算法时间复杂度必须是 O(log n) 级别。
+
+如果数组中不存在目标值，返回 [-1, -1]。
+
+示例 1:
+
+输入: nums = [5,7,7,8,8,10], target = 8
+输出: [3,4]
+示例 2:
+
+输入: nums = [5,7,7,8,8,10], target = 6
+输出: [-1,-1]
+
+
+
+
+
+
+
+
+# 自答
+class Solution:
+    def searchRange(self, nums: List[int], target: int) -> List[int]:
+        result = [-1, -1]
+        for i in range(len(nums)):
+            if nums[i] == target:
+                result[0] = i
+                result[1] = i
+                start = i
+                break
+                
+        if result[0] == -1:
+            return result
+        
+        for i in range(start+1, len(nums)):
+            if nums[i] == target:
+                result[1] = i
+            else:
+                break
+        return result
+
+
+
+
+
+# 参考解答：（类二分法）
+class Solution:
+    def searchRange(self, nums: List[int], target: int) -> List[int]:
+        if not nums:
+            return [-1,-1]
+        res=[-1, -1]
+        low = 0
+        n = len(nums)
+        high = n - 1
+        while low <= high :
+            mid = low + (high - low)//2
+            if nums[mid] == target:
+                low = mid
+                high = mid
+                while low > 0 and nums[low - 1] == nums[low]:
+                    low -= 1
+                while high < n-1 and nums[high] == nums[high + 1]:
+                    high += 1
+                res[0] = low
+                res[1] = high
+                break
+            elif nums[mid] < target:
+                low = mid + 1
+            else:
+                high = mid -1
+        return res 
