@@ -1,0 +1,67 @@
+给定两个整数，被除数 dividend 和除数 divisor。将两数相除，要求不使用乘法、除法和 mod 运算符。
+
+返回被除数 dividend 除以除数 divisor 得到的商。
+
+示例 1:
+
+输入: dividend = 10, divisor = 3
+输出: 3
+示例 2:
+
+输入: dividend = 7, divisor = -3
+输出: -2
+说明:
+
+被除数和除数均为 32 位有符号整数。
+除数不为 0。
+假设我们的环境只能存储 32 位有符号整数，其数值范围是 [−231,  231 − 1]。本题中，如果除法结果溢出，则返回 231 − 1。
+
+
+
+
+
+
+
+# 一开始想到的思路是用最普通的使用减法来代替除法，但是这样做效率不高导致部分样例超时，
+# 因此采用将divisor移位,同时商相应增加的思想来解决，执行时间会比用减法快不少。
+
+class Solution {
+public:
+    int divide(int dividend, int divisor) {
+        if(dividend==INT_MIN && divisor==-1) return INT_MAX;
+        if(dividend==0) return 0;
+        int sign=((dividend<0)^(divisor<0))? -1 : 1;
+        long x=(dividend<0)? -(long)dividend : (long)dividend;
+        long y=(divisor<0)? -(long)divisor : (long)divisor;
+        long result=0;
+        while(x>=y)
+        {
+            long temp=y,mid=1;
+            while(x>=(temp<<1))
+            {
+                mid<<=1;
+                temp<<=1;
+            }
+            result+=mid;
+            x-=temp;
+        }
+        return sign>0 ? result : -result;
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
