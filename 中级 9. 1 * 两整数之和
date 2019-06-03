@@ -1,0 +1,55 @@
+不使用运算符 + 和 - ，计算两整数 a 、b 之和。
+
+示例 1:
+
+输入: a = 1, b = 2
+输出: 3
+示例 2:
+
+输入: a = -2, b = 3
+输出: 1
+
+
+
+
+
+
+
+
+
+# 参考解答1：
+while b != 0:
+            carry = a & b
+            a = (a ^ b) % 0x100000000
+            b = (carry << 1) % 0x100000000
+        return a if a <= 0x7FFFFFFF else a | (~0x100000000+1)
+
+
+
+
+# 参考解答2：（快一点）
+class Solution:
+    def getSum(self, a: int, b: int) -> int:
+        return sum((a, b))
+        
+        
+        
+        
+        
+        
+        
+# 无法AC，但思想要理解：
+class Solution {
+public:
+    int getSum(int a, int b) {
+        int c;
+        while(b != 0) {
+            c = a^b;
+            b = a&b;
+            b = b << 1;
+            a = c;
+        }
+        return a;
+    }
+};
+     
