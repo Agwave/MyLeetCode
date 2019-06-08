@@ -1,0 +1,188 @@
+在一个给定的数组nums中，总是存在一个最大元素 。
+
+查找数组中的最大元素是否至少是数组中每个其他数字的两倍。
+
+如果是，则返回最大元素的索引，否则返回-1。
+
+示例 1:
+
+输入: nums = [3, 6, 1, 0]
+输出: 1
+解释: 6是最大的整数, 对于数组中的其他整数,
+6大于数组中其他元素的两倍。6的索引是1, 所以我们返回1.
+ 
+
+示例 2:
+
+输入: nums = [1, 2, 3, 4]
+输出: -1
+解释: 4没有超过3的两倍大, 所以我们返回 -1.
+ 
+
+提示:
+
+nums 的长度范围在[1, 50].
+每个 nums[i] 的整数范围在 [0, 99].
+
+
+
+
+
+
+
+-------------------------自答-----------------------
+# python3：
+class Solution:
+    def dominantIndex(self, nums: List[int]) -> int:
+        index = -1
+        max_index = -1
+        max_double = -1
+        for i in range(len(nums)):
+            if nums[i] >= max_double:
+                index = i
+                max_index = i
+                max_double = 2 * nums[i]
+            elif nums[i] > nums[max_index]:
+                index = -1
+                max_index = i
+                max_double = 2 * nums[i]
+            elif (2*nums[i]) > nums[max_index]:
+                index = -1
+        return index
+
+
+# C++
+class Solution {
+public:
+    int dominantIndex(vector<int>& nums) {
+        int index = -1;
+        int maxIndex = -1;
+        int maxDouble = -1;
+        int n = nums.size();
+        for (int i = 0; i < n; ++i) {
+            if (nums[i] >= maxDouble) {
+                index = i;
+                maxIndex = i;
+                maxDouble = 2 * nums[i];
+            }
+            else if (nums[i] > nums[maxIndex]) {
+                index = -1;
+                maxIndex = i;
+                maxDouble = 2 * nums[i];
+            }
+            else if ((2 * nums[i]) > nums[maxIndex]) {
+                index = -1;
+            }
+        }
+        return index;
+    }
+};
+
+
+# Java:
+class Solution {
+    public int dominantIndex(int[] nums) {
+        int index = -1;
+        int maxIndex = -1;
+        int maxDouble = -1;
+        int n = nums.length;
+        for (int i = 0; i < n; ++i) {
+            if (nums[i] >= maxDouble) {
+                index = i;
+                maxIndex = i;
+                maxDouble = 2 * nums[i];
+            }
+            else if (nums[i] > nums[maxIndex]) {
+                index = -1;
+                maxIndex = i;
+                maxDouble = 2 * nums[i];
+            }
+            else if ((2 * nums[i]) > nums[maxIndex]) {
+                index = -1;
+            }
+        }
+        return index;
+    }
+}
+
+
+
+
+
+
+--------------------------参考解答-------------------------
+# python3：
+class Solution:
+    def dominantIndex(self, nums: List[int]) -> int:
+        if len(nums) > 1:
+            max_nums = sorted(nums)
+            if max_nums[-1] >= max_nums[-2] * 2:
+                return nums.index(max_nums[-1])
+            return -1
+        return 0
+        
+  
+  
+  
+  
+# C++:
+# 找到最大的两个数进行比较
+class Solution {
+public:
+    int dominantIndex(vector<int>& nums) {
+    int ret = -1;
+    if(nums.size() == 1) return 0;
+    
+    struct Info {
+        int index = 0;
+        int value = 0;
+    };
+    
+    Info numMax1, numMax2;
+    int count = 0;
+    for (auto num: nums) {
+        if (numMax1.value < num) {
+            numMax2.value = numMax1.value;
+            numMax2.index = numMax1.index;
+            numMax1.value = num;
+            numMax1.index = count;
+        } else if (numMax2.value < num) {
+            numMax2.value = num;
+            numMax2.index = count;
+        }
+        
+        count++;
+    }
+    
+    if (numMax1.value  >=  2 * numMax2.value) {
+        return numMax1.index;
+    }
+  
+    return ret;
+    }
+    
+    
+    
+# Java:
+class Solution {
+    public int dominantIndex(int[] nums) {
+        int max = Double.MIN_EXPONENT;
+        int target = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (max < nums[i]) {
+                max = nums[i];
+                target = i;
+            }
+        }
+
+        for (int i = 0; i < nums.length; i++) {
+            if (i == target) {
+                continue;
+            }
+            if (nums[i] > max/2) {
+                return -1;
+            }
+        }
+        return target;
+    }
+}
