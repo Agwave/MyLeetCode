@@ -1,0 +1,249 @@
+给定一个包含 m x n 个元素的矩阵（m 行, n 列），请按照顺时针螺旋顺序，返回矩阵中的所有元素。
+
+示例 1:
+
+输入:
+[
+ [ 1, 2, 3 ],
+ [ 4, 5, 6 ],
+ [ 7, 8, 9 ]
+]
+输出: [1,2,3,6,9,8,7,4,5]
+示例 2:
+
+输入:
+[
+  [1, 2, 3, 4],
+  [5, 6, 7, 8],
+  [9,10,11,12]
+]
+输出: [1,2,3,4,8,12,11,10,9,5,6,7]
+
+
+
+
+
+
+
+# 自答：
+
+# python3：
+空
+
+
+
+
+
+# C++：
+class Solution {
+public:
+    vector<int> spiralOrder(vector<vector<int>>& matrix) {
+        vector<int> ret;
+        if (matrix.size() == 0) return ret;
+        int x1 = 0;
+        int x2 = matrix[0].size() - 1;
+        int y1 = 0;
+        int y2 = matrix.size() - 1;
+        
+        while ((x1 <= x2) and (y1 <= y2)) {
+            for (int i = x1; i <= x2; ++i) {
+                ret.push_back(matrix[y1][i]);
+            }
+            ++y1;
+            if (y1 > y2) break;
+            for (int i = y1; i <= y2; ++i) {
+                ret.push_back(matrix[i][x2]);
+            }
+            --x2;
+            if (x1 > x2) break;
+            for (int i = x2; i >= x1; --i) {
+                ret.push_back(matrix[y2][i]);
+            }
+            --y2;
+            for (int i = y2; i >= y1; --i) {
+                ret.push_back(matrix[i][x1]);
+            }
+            ++x1;
+        }
+        return ret;
+    }
+};
+
+
+
+
+
+# Java：
+class Solution {
+    public List<Integer> spiralOrder(int[][] matrix) {
+        List<Integer> ret = new ArrayList<>();
+        if (matrix.length == 0) return ret;
+        int left_col = 0;
+        int right_col = matrix[0].length -1;
+        int up_row = 0;
+        int bottom_row = matrix.length -1;
+        while ((left_col <= right_col) && (up_row <= bottom_row)) {
+            for (int i = left_col; i <= right_col; ++i) {
+                ret.add(matrix[up_row][i]);
+            }
+            ++up_row;
+            if (up_row > bottom_row) break;
+            for (int i = up_row; i <= bottom_row; ++i) {
+                ret.add(matrix[i][right_col]);
+            }
+            --right_col;
+            if (left_col > right_col) break;
+            for (int i = right_col; i >= left_col; --i) {
+                ret.add(matrix[bottom_row][i]);
+            }
+            --bottom_row;
+            for (int i = bottom_row; i >= up_row; --i) {
+                ret.add(matrix[i][left_col]);
+            }
+            ++left_col;
+        }
+        return ret;
+    }
+}
+
+
+
+
+
+# 参考解答：
+# python3
+class Solution:
+    def spiralOrder(self, matrix):
+        """
+        :type matrix: List[List[int]]
+        :rtype: List[int]
+        """
+        if not matrix : return []
+        shang_row = 0
+        xia_row = len(matrix) - 1 
+        zuo_col = 0
+        you_col = len(matrix[0]) - 1
+        res = []
+        while shang_row <= xia_row  and  zuo_col <= you_col:
+            # 从左到右
+            for i in range(zuo_col, you_col+1):
+                #print(shang_row, i)
+                res.append(matrix[shang_row][i])
+            shang_row += 1
+            if shang_row > xia_row:break
+            # 从上到下
+            for i in range(shang_row, xia_row+1):
+                res.append(matrix[i][you_col])
+            you_col -= 1
+            if zuo_col > you_col:break
+            # 从右到左
+            for i in range(you_col, zuo_col - 1,-1):
+                #print(xia_row - 1, i)
+                res.append(matrix[xia_row][i])
+            xia_row -= 1
+            # 从下到上
+            for i in range(xia_row , shang_row - 1, -1):
+                #print(i, zuo_col)  
+                res.append(matrix[i][zuo_col])
+            zuo_col += 1
+        return res
+        
+        
+
+
+
+# C++：
+class Solution {
+public:
+    vector<int> spiralOrder(vector<vector<int>>& matrix) {
+        vector<int> result;
+        int m = matrix.size();
+        if(m==0) return result;
+        int n = matrix[0].size();
+        int count =0;
+        while((m-count*2)>0 && (n-count*2)>0){
+            int i=count,j=count;
+            while(i==count&&j<n-count){ result.push_back(matrix[i][j++]);} j--;
+            if(++ i>= m-count) break;
+            while(j==n-count-1 && i< m-count){result.push_back(matrix[i++][j]);} i--; 
+            if(--j< count) break;
+            while(i==m-count-1 && j >= count){result.push_back(matrix[i][j--]);} j++;
+            if(--i<=count) break;
+            while(j==count && i> count){result.push_back(matrix[i--][j]);}
+            
+            count ++;
+            
+        }
+        
+        return result;
+        
+    }
+};
+
+
+
+
+
+# Java：
+class Solution {
+    public List<Integer> spiralOrder(int[][] matrix) {
+        ArrayList<Integer> order = new ArrayList<>();
+        
+        if(matrix.length==0 || matrix[0].length == 0) return order;
+        
+        int xMin = 0;
+        int yMin = 0;
+        int xMax = matrix[0].length -1;
+        int yMax = matrix.length -1;
+        
+        order.add(matrix[0][0]);
+        
+        int i  =0;
+        int j = 0;
+        
+        while(true){
+            while(i<xMax){
+                order.add(matrix[j][++i]);
+            }
+            
+            if(++yMin > yMax){
+                break;
+            }
+            
+            while(j<yMax){
+                order.add(matrix[++j][i]);
+            }
+            
+            if(xMin>--xMax){
+                break;
+            }
+
+            while(i>xMin){
+                order.add(matrix[j][--i]);
+            }
+            
+            if(yMin>--yMax){
+                break;
+            }
+            
+            while(j>yMin){
+                order.add(matrix[--j][i]);
+            }
+            
+            if(++xMin>xMax){
+                break;
+            }
+        }
+        
+        return order;
+        
+     }
+}
+
+
+
+
+
+
+
+        
