@@ -1,0 +1,169 @@
+给定一个非负整数 numRows，生成杨辉三角的前 numRows 行。
+
+
+
+在杨辉三角中，每个数是它左上方和右上方的数的和。
+
+示例:
+
+输入: 5
+输出:
+[
+     [1],
+    [1,1],
+   [1,2,1],
+  [1,3,3,1],
+ [1,4,6,4,1]
+]
+
+
+
+
+
+# 自答：
+
+# python3：
+class Solution:
+    def generate(self, numRows: int) -> List[List[int]]:
+        if numRows == 1:
+            return [[1]]
+        if numRows == 2:
+            return [[1], [1, 1]]
+        ret = []
+        row = [1, 1]
+        for i in range(numRows):
+            last = row
+            row = [1] * (i + 1)
+            for j in range(1, i):
+                row[j] = last[j-1] + last[j]  
+            ret.append(row)
+        return ret
+
+
+
+
+
+# C++:
+class Solution {
+public:
+    vector<vector<int>> generate(int numRows) {
+        vector<vector<int>> ret;
+        for (int i = 0; i < numRows; ++i) {
+            vector<int> row;
+            for (int j = 0; j < i+1; ++j) {
+                if (i == 0 or j == 0 or j == i) {
+                    row.push_back(1);
+                } else {
+                    row.push_back(ret[i-1][j-1] + ret[i-1][j]);
+                }
+            }
+            ret.push_back(row);
+        }
+        return ret;
+    }
+};
+
+
+
+
+
+# java:
+class Solution {
+    public List<List<Integer>> generate(int numRows) {
+        List<List<Integer>> ret = new ArrayList<>();
+        for (int i = 0; i < numRows; ++i) {
+            List<Integer> row = new ArrayList<>();
+            for (int j = 0; j < i + 1; ++j) {
+                if (j == 0 || j == i || i == 0) {
+                    row.add(1);
+                } else {
+                    row.add(ret.get(i-1).get(j-1) + ret.get(i-1).get(j));
+                }
+            }
+            ret.add(row);
+        }
+        return ret;
+    }
+}
+
+
+
+
+# 参考解答：
+
+# python3：
+class Solution:
+    def generate(self, numRows: int) -> List[List[int]]:
+        cs = []
+        for m in range(numRows):
+            s = []
+            for n in range(m + 1):
+                if m== 0 or n == 0 or m == 1 or n == m:
+                    s.append(1)
+                else:
+                    s.append(cs[m - 1][n-1] + cs[m-1][n])
+            cs.append(s)
+        return cs
+
+
+
+
+
+# C++:
+class Solution {
+public:
+    vector<vector<int>> generate(int numRows) {
+        vector<int> t1;
+        vector<vector<int>> pas;
+        if(numRows == 0){
+            return pas;
+        }
+        t1.push_back(1);
+        pas.push_back(t1);
+        for(int i = 1; i < numRows; i++){
+            t1.push_back(0);
+            vector<int> t2 = t1;
+            for(int j = 1; j <= i; j++){
+                t2[j] = t1[j - 1] + t1[j];
+            }
+            pas.push_back(t2);
+            t1 = t2;
+        }
+        return pas;
+    }
+};
+
+
+
+
+
+# Java:
+class Solution {
+    public List<List<Integer>> generate(int numRows) {
+        if (numRows <= 0) {
+            return new ArrayList<>(0);
+        }
+        List<List<Integer>> result = new ArrayList<>();
+        for (int i = 0; i < numRows; i++) {
+            List<Integer> list = new ArrayList<>(i+1);
+            for (int j = 0; j < i + 1; j++) {
+                if (j == 0 || j == i) {
+                    list.add(1);
+                    continue;
+                }
+                List<Integer> preList = result.get(i - 1);
+                int t = preList.get(j-1) + preList.get(j);
+                list.add(t);
+            }
+            result.add(list);
+        }
+        return result;
+    }
+}
+
+
+
+
+
+
+
