@@ -1,0 +1,234 @@
+给定一个含有 n 个正整数的数组和一个正整数 s ，找出该数组中满足其和 ≥ s 的长度最小的连续子数组。如果不存在符合条件的连续子数组，返回 0。
+
+示例: 
+
+输入: s = 7, nums = [2,3,1,2,4,3]
+输出: 2
+解释: 子数组 [4,3] 是该条件下的长度最小的连续子数组。
+进阶:
+
+如果你已经完成了O(n) 时间复杂度的解法, 请尝试 O(n log n) 时间复杂度的解法。
+
+
+
+
+
+
+
+
+
+########################自答#########################
+# python3：99%
+class Solution:
+    def minSubArrayLen(self, s: int, nums: List[int]) -> int:
+        ret = 0
+        count = 0
+        n = len(nums)
+        flag = True
+        for i in range(n):
+            if count + nums[i] >= s:
+                faster = i
+                ret = i+1
+                count += nums[i]
+                flag = False
+                break
+            else:
+                count += nums[i]
+        if flag:
+            return ret
+        slower = 1
+        count -= nums[slower-1]
+        print(ret)
+        print(slower)
+        print(faster)
+        print(count)
+        while slower <= faster:
+            if count >= s:
+                ret -= 1
+                slower += 1
+                count -= nums[slower-1]
+            else:
+                slower += 1
+                faster += 1
+                if faster == n:
+                    break
+                count = count + nums[faster] - nums[slower-1]
+            print()
+            print(ret)
+            print(slower)
+            print(faster)
+            print(count)
+        return ret
+
+
+
+
+# C++：83%
+class Solution {
+public:
+    int minSubArrayLen(int s, vector<int>& nums) {
+        int n = nums.size();
+        int sum = 0;
+        int ret = 0;
+        bool flag = true;
+        int slower = 0;
+        int faster = 0;
+        
+        for (int i = 0; i < n; ++i) {
+            sum += nums[i];
+            if (sum >= s) {
+                ret = i + 1;
+                faster = i;
+                flag = false;
+                break;
+            }
+        }
+        
+        if (flag) return ret;
+        
+        slower++;
+        sum -= nums[slower - 1];
+        while (slower <= faster) {
+            if (sum >= s) {
+                ret--;
+                slower++;
+                sum -= nums[slower - 1];
+            } else {
+                slower++;
+                faster++;
+                if (faster == n) {
+                    break;
+                }
+                sum = sum - nums[slower - 1] + nums[faster];
+            }
+        }
+        
+        return ret;
+    }
+};
+
+
+
+
+# Java：99.66%
+class Solution {
+    public int minSubArrayLen(int s, int[] nums) {
+        int n = nums.length;
+        int sum = 0;
+        int ret = 0;
+        int slower = 0;
+        int faster = 0;
+        boolean flag = true;
+        
+        for (int i = 0; i < n; ++i) {
+            sum += nums[i];
+            if (sum >= s) {
+                ret = i + 1;
+                faster = i;
+                flag = false;
+                break;
+            }
+        }
+        
+        if (flag) return ret;
+        
+        slower++;
+        sum -= nums[slower - 1];
+        
+        while (slower <= faster) {
+            if (sum >= s) {
+                ret--;
+                slower++;
+                sum -= nums[slower - 1];
+            } else {
+                slower++;
+                faster++;
+                if (faster == n) break;
+                sum = sum - nums[slower - 1] + nums[faster];
+            }
+        }
+        return ret;
+    }
+}
+
+
+
+
+
+
+########################参考解答#########################
+# python3：
+class Solution:
+    def minSubArrayLen(self, s: int, nums: List[int]) -> int:
+        n = len(nums)
+        l = -1
+        sum = 0
+        res = n + 1
+        for r in range(n):
+            if nums[r] > s:
+                return 1
+            sum += nums[r]
+            if sum >= s:
+                while sum >=s:
+                    l += 1
+                    sum -= nums[l]
+                res = min(res, r-l+1)
+        return res if res != n + 1 else 0
+
+
+
+
+# C++：
+class Solution {
+public:
+    int minSubArrayLen(int s, vector<int>& nums) {
+        int n = nums.size(), start = 0, sum = 0, minlen = INT_MAX;
+        for (int i = 0; i < n; i++) { 
+            sum += nums[i]; 
+            while (sum >= s) {
+                minlen = min(minlen, i - start + 1);
+                sum -= nums[start++];
+            }
+        }
+        return minlen == INT_MAX ? 0 : minlen;
+    }
+};
+
+
+
+
+# Java：
+class Solution {
+    public int minSubArrayLen(int s, int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+
+        int result = Integer.MAX_VALUE;
+        int lo = 0;
+        int hi = 0;
+        int length = nums.length;
+        int sum = nums[0];
+
+        while (hi <= length) {
+            while (lo <= hi) {
+                if (sum >= s) {
+                    result = Math.min(result, hi - lo + 1);
+                    sum -= nums[lo];
+                    lo++;
+                } else {
+                    break;
+                }
+            }
+            hi++;
+            if (hi < length) {
+                sum += nums[hi];
+            }
+        }
+        return result > length ? 0 : result;
+    }
+}
+
+
+
+
