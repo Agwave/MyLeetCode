@@ -1,0 +1,145 @@
+给定一个字符串，你需要反转字符串中每个单词的字符顺序，同时仍保留空格和单词的初始顺序。
+
+示例 1:
+
+输入: "Let's take LeetCode contest"
+输出: "s'teL ekat edoCteeL tsetnoc" 
+注意：在字符串中，每个单词由单个空格分隔，并且字符串中不会有任何额外的空格。
+
+
+
+
+
+
+
+####################自答####################
+# python：
+class Solution:
+    def reverseWords(self, s: str) -> str:
+        wordList = []
+        words = s.split()
+        for word in words:
+            wordList.append(word[::-1])
+        ret = ' '.join(wordList)
+        return ret
+
+
+
+
+# C++：参考
+class Solution {
+public:
+    string reverseWords(string s) {
+        vector<int> index;
+        for (int i = 0; i < s.size(); ++i) {
+            if (s[i] == ' ') index.push_back(i);
+        }
+        
+        int n = index.size();
+        if (n == 0) {
+            reverse(s.begin(), s.end());
+            return s;
+        }
+        
+        reverse(s.begin(), s.begin() + index[0]);
+        for (int i = 0; i < n - 1; ++i) {
+            reverse(s.begin() + index[i] + 1, s.begin() + index[i + 1]);
+        }
+        reverse(s.begin() + index[n - 1] + 1, s.end());
+        return s;
+    }
+};
+
+
+
+
+
+
+
+# Java：参考
+class Solution {
+    public String reverseWords(String s) {
+        String[] words = s.split(" ");
+        StringBuilder ret = new StringBuilder();
+        for (String word:words) {
+            ret.append(new StringBuilder(word).reverse().append(" "));
+        }
+        return ret.toString().trim();
+    }
+}
+
+
+
+
+
+####################参考解答####################
+# python：
+class Solution:
+    def reverseWords(self, s: str) -> str:
+        temp = s.split(' ')
+        res = ''
+        for each in temp:
+            res += each[::-1] + ' '
+        return res[:-1]
+
+
+
+
+
+# C++：
+class Solution {
+public:
+    string reverseWords(string s) 
+    {
+        for(int i = 0,k = 0;i<=s.length();++i)
+        {
+            if(s[i]==' '||s[i]=='\0')
+            {
+                for(int m = k,n = i-1;m<n;++m,--n)
+                {
+                    swap(s[m],s[n]);
+                }
+                k = i+1;
+            }     
+        }
+        return s;
+    }
+};
+
+
+
+
+
+
+
+# Java：
+class Solution {
+    public String reverseWords(String s) {
+        char[] chars = s.toCharArray();
+        int startIndex = 0;
+        while (startIndex < s.length()){
+            int endIndex = s.indexOf(' ', startIndex + 1);
+            if(endIndex == -1){
+                endIndex = s.length();
+            }
+            reverse(startIndex, endIndex, chars);
+            startIndex = endIndex + 1;
+        }
+        return String.valueOf(chars);
+
+    }
+
+    private void reverse(int startIndex, int endIndex, char[] chars) {
+     
+        for(int i = startIndex, k= endIndex-1; i < k; i++, k--){
+            char temp = chars[i];
+            chars[i] = chars[k];
+            chars[k] = temp;
+        }
+       
+    }
+}
+
+
+
+
