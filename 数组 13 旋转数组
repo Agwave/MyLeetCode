@@ -33,9 +33,9 @@ class Solution:
         """
         i = k % len(nums)
         nums[:] = nums[-i:] + nums[0:-i]
-
-
-
+        
+        
+        
 
 
 
