@@ -36,6 +36,34 @@ linkedList.get(1);            //返回3
 
 
 ####################自答#####################
+总结：
+1. C++:
+创建了结构体Node，看其他程序似乎也可以用类。需要注意的是结构体构造时的“结构体构造函数”：
+Node(int x): val(x), pre(NULL), next(NULL) {}
+还有需要注意的是构造函数中的变量需要提前在构造函数外定义。
+
+2. Java：
+利用了面向对象。同样需要注意的是构造函数中this的各种属性都需要在构造函数外声明。
+
+3. python3：
+利用了面向对象。self的属性无需提前定义。
+
+4.另：
+看到其他人的解答，发现一个比较好的点是，他们会注意哪些变量或属性应该是private。这里的head、tail、size最好是private的。
+此外，在每个函数的开头，都有注释，这是很好的习惯，似乎也可以用来查看注释，python3是__doc__?
+python3:
+def 
+"""
+这里是注释
+"""
+C++ 或 Java:
+/**这里是注释*/
+private void addAtIndex(int index, int val)
+
+
+
+
+
 # python3：72%
 class Node(object):
     
@@ -243,8 +271,106 @@ private:
 
 
 
-# Java：
+# Java：92%
+class Node {
+    int val;
+    Node pre;
+    Node next;
+    public Node(int x) {
+        this.val = x;
+        this.pre = null;
+        this.next = null;
+    }
+}
 
+
+class MyLinkedList {
+    Node head;
+    Node tail;
+    int size = 0;
+    /** Initialize your data structure here. */
+    public MyLinkedList() {
+        this.head = new Node(0);
+        this.tail = new Node(0);
+        this.head.next = this.tail;
+        this.tail.pre = this.head;
+        this.size = 0;
+    }
+    
+    /** Get the value of the index-th node in the linked list. If the index is invalid, return -1. */
+    public int get(int index) {
+        if (index < 0 || index >= size) return -1;
+        Node node = this.head.next;
+        for (int i = 0; i < index; ++i) {
+            node = node.next;
+        }
+        return node.val;
+    }
+    
+    /** Add a node of value val before the first element of the linked list. After the insertion, the new node will be the first node of the linked list. */
+    public void addAtHead(int val) {
+        Node newHead = new Node(val);
+        Node oldHead = this.head.next;
+        this.head.next = newHead;
+        newHead.pre = this.head;
+        newHead.next = oldHead;
+        oldHead.pre = newHead;
+        this.size++;
+    }
+    
+    /** Append a node of value val to the last element of the linked list. */
+    public void addAtTail(int val) {
+        Node newTail = new Node(val);
+        Node oldTail = this.tail.pre;
+        oldTail.next = newTail;
+        newTail.pre = oldTail;
+        newTail.next = this.tail;
+        this.tail.pre = newTail;
+        this.size++;
+    }
+    
+    /** Add a node of value val before the index-th node in the linked list. If index equals to the length of linked list, the node will be appended to the end of linked list. If index is greater than the length, the node will not be inserted. */
+    public void addAtIndex(int index, int val) {
+        if (index <= size) {
+            Node nextNode = this.head.next;
+            for (int i = 0; i < index; ++i) {
+                nextNode = nextNode.next;
+            }
+            Node preNode = nextNode.pre;
+            Node node = new Node(val);
+            preNode.next = node;
+            node.pre = preNode;
+            node.next = nextNode;
+            nextNode.pre = node;
+            this.size++;
+        }
+    }
+    
+    /** Delete the index-th node in the linked list, if the index is valid. */
+    public void deleteAtIndex(int index) {
+        if (index >= 0 && index < size) {
+            Node node = this.head.next;
+            for (int i = 0; i < index; ++i) {
+                node = node.next;
+            }
+            Node preNode = node.pre;
+            Node nextNode = node.next;
+            preNode.next = nextNode;
+            nextNode.pre = preNode;
+            this.size--;
+        }
+    }
+}
+
+/**
+ * Your MyLinkedList object will be instantiated and called as such:
+ * MyLinkedList obj = new MyLinkedList();
+ * int param_1 = obj.get(index);
+ * obj.addAtHead(val);
+ * obj.addAtTail(val);
+ * obj.addAtIndex(index,val);
+ * obj.deleteAtIndex(index);
+ */
 
 
 
@@ -452,7 +578,128 @@ private:
 
 
 # Java：
+class MyLinkedList {
+    class Node{
+        public int val;
+        public Node next;
+        public Node(int val){
+            this.val = val;
+            this.next = null;
+        }
+        
+        public Node(int val,Node next){
+            this.val = val;
+            this.next = next;
+        }
+    }
+    
+    private Node head;
+    private Node tail;
+    private int size;
+    
+    /** Initialize your data structure here. */
+    public MyLinkedList() {
+        // 由于head，tail，size是private，所以都要用this.head的形式
+        this.head = null;
+        this.tail = null;
+        this.size = 0;
+    }
+    
+    /** Get the value of the index-th node in the linked list. If the index is invalid, return -1. */
+    public int get(int index) {
+        if(index > this.size - 1 || index < 0){
+            return -1;
+        }
+        
+        Node tmp = this.head;
+        for(int i = 0 ; i < index ; i++){
+            tmp = tmp.next;
+        }
+        return tmp.val;
+    }
+    
+    /** Add a node of value val before the first element of the linked list. After the insertion, the new node will be the first node of the linked list. */
+    public void addAtHead(int val) {
+        Node newNode = new Node(val,this.head);
+        this.head = newNode;
+        if(this.size == 0){
+            this.tail = newNode;
+        }
+        this.size = this.size + 1;
+    }
+    
+    /** Append a node of value val to the last element of the linked list. */
+    public void addAtTail(int val) {
+        Node newNode = new Node(val, null);
+        
+        if(this.size == 0){
+            this.head = newNode;
+            this.tail = newNode;
+        }else{
+            this.tail.next = newNode;
+            this.tail = newNode;
+        }
+        this.size = this.size + 1;
+    }
+    
+    /** Add a node of value val before the index-th node in the linked list. If index equals to the length of linked list, the node will be appended to the end of linked list. If index is greater than the length, the node will not be inserted. */
+    public void addAtIndex(int index, int val) {
+        Node newNode = new Node(val);
+        if(index > this.size){
+            return;
+        }
+        if(index <= 0){
+            // 注意，此处不能return this.addAtHead(val)
+            this.addAtHead(val);
+            return;
+        }
+        if(index == this.size){
+            this.addAtTail(val);
+            return;
+        }
+        Node prev = this.head;
+        for(int i = 0; i < index-1; i++){
+            prev = prev.next;
+        }
+        Node tmp = prev.next;
+        prev.next = newNode;
+        newNode.next = tmp;
+        this.size = this.size + 1;
+    }
+    
+    /** Delete the index-th node in the linked list, if the index is valid. */
+    public void deleteAtIndex(int index) {
+        if(index < 0 ||index >= this.size){
+            return;
+        }
 
+        if (index == 0){
+            this.head = this.head.next;
+            this.size = this.size - 1;
+            return;
+        }
+        
+        Node prev = this.head;
+        for(int i = 0; i < index-1; i++){
+            prev = prev.next;
+        }
+        if (index == this.size - 1){
+            this.tail = prev;
+        }
+        prev.next = prev.next.next;
+        this.size = this.size - 1;      
+    }
+}
+
+/**
+ * Your MyLinkedList object will be instantiated and called as such:
+ * MyLinkedList obj = new MyLinkedList();
+ * int param_1 = obj.get(index);
+ * obj.addAtHead(val);
+ * obj.addAtTail(val);
+ * obj.addAtIndex(index,val);
+ * obj.deleteAtIndex(index);
+ */
 
 
 
