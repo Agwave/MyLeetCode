@@ -1,0 +1,239 @@
+给定一个链表，删除链表的倒数第 n 个节点，并且返回链表的头结点。
+
+示例：
+
+给定一个链表: 1->2->3->4->5, 和 n = 2.
+
+当删除了倒数第二个节点后，链表变为 1->2->3->5.
+说明：
+
+给定的 n 保证是有效的。
+
+进阶：
+
+你能尝试使用一趟扫描实现吗？
+
+
+
+
+
+
+
+
+
+#######################自答########################
+# python3:92%
+class Solution:
+    def removeNthFromEnd(self, head: ListNode, n: int) -> ListNode:
+        dummy = ListNode(0)
+        dummy.next = head
+        slower, faster = dummy, dummy
+        for _ in range(n+1):
+            faster = faster.next
+        while faster:
+            slower = slower.next
+            faster = faster.next
+        slower.next = slower.next.next
+        return dummy.next
+        
+        
+        
+        
+        
+        
+        
+# C++：88%
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        ListNode* fakeHead = new ListNode(0);
+        fakeHead->next = head;
+        ListNode* faster = fakeHead;
+        ListNode* slower = fakeHead;
+        for (int i = 0; i < n+1; ++i) faster = faster->next;
+        while (faster) {
+            slower = slower->next;
+            faster = faster->next;
+        }
+        slower->next = (slower->next)->next;
+        return fakeHead->next;
+    }
+};
+
+
+
+
+
+
+
+
+# Java：89%
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        ListNode fakeHead = new ListNode(0);
+        fakeHead.next = head;
+        ListNode slower = fakeHead;
+        ListNode faster = fakeHead;
+        for (int i = 0; i < n+1; ++i) faster = faster.next;
+        while (faster != null) {
+            slower = slower.next;
+            faster = faster.next;
+        }
+        slower.next = (slower.next).next;
+        return fakeHead.next;
+    }
+}
+
+
+
+
+
+
+
+
+
+######################参考解答##################
+# python3:
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    def removeNthFromEnd(self, head: ListNode, n: int) -> ListNode:
+        tmp = head
+        length = 0
+        while tmp != None:
+            length += 1
+            tmp = tmp.next
+        if length == 0:
+            return None
+        if length == 1:
+            return None
+        n %= length
+        n = length - n
+        tmp = head
+        if n == length:
+            return head.next
+        for i in range(n-1):
+            tmp = tmp.next
+        if n == length - 1:
+            tmp.next = None
+        else:
+            tmp.next = tmp.next.next
+            
+        return head
+
+
+
+
+
+
+# C++:
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+     ListNode *dummy = new ListNode(0);
+    dummy->next = head;
+    ListNode *first = dummy;
+    ListNode *second = dummy;
+    // Advances first pointer so that the gap between first and second is n nodes apart
+    for (int i = 1; i <= n + 1; i++) {
+        first = first->next;
+    }
+    // Move first to the end, maintaining the gap
+    while (first != NULL) {
+        first = first->next;
+        second = second->next;
+    }
+    second->next = second->next->next;
+    return dummy->next;
+    }
+    
+};
+
+
+
+
+
+# Java:
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        if (head == null){
+            return head;
+        }
+
+        if (n <=0 ){
+            return head;
+        }
+
+        int count = 0;
+        ListNode t = head;
+        while (t != null){
+            count ++;
+            t = t.next;
+        }
+
+        if (count < n){
+            return head;
+        }
+
+        if (count == n){
+            return head.next;
+        }
+
+        int del = count - n;
+        count = 0;
+        t = head;
+        while (t != null){
+            count++;
+
+            if (count == del){
+                break;
+            }
+
+            t = t.next;
+        }
+
+        t.next = t.next.next;
+
+        return head;
+    }
+}
+
+
+
+
