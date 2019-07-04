@@ -1,0 +1,197 @@
+反转一个单链表。
+
+示例:
+
+输入: 1->2->3->4->5->NULL
+输出: 5->4->3->2->1->NULL
+进阶:
+你可以迭代或递归地反转链表。你能否用两种方法解决这道题？
+
+
+
+
+
+
+
+
+
+######################自答########################
+# python：
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution(object):
+    def reverseList(self, head):
+        """
+        :type head: ListNode
+        :rtype: ListNode
+        """
+        fakeHead = ListNode(0)
+        fakeHead.next = head
+        curHead = fakeHead.next
+        while curHead and curHead.next:
+            reverseHead = curHead.next
+            curHead.next = reverseHead.next
+            reverseHead.next = fakeHead.next
+            fakeHead.next = reverseHead
+        return fakeHead.next
+
+
+
+
+
+
+
+
+# C++：92%
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        ListNode* fakeHead = new ListNode(0);
+        fakeHead->next = head;
+        ListNode* curHead = fakeHead->next;
+        while (curHead && curHead->next) {
+            ListNode* reverseNode = curHead->next;
+            curHead->next = reverseNode->next;
+            reverseNode->next = fakeHead->next;
+            fakeHead->next = reverseNode;
+        }
+        return fakeHead->next;
+    }
+};
+
+
+
+
+
+
+
+# Java：84%
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode reverseList(ListNode head) {
+        ListNode fakeHead = new ListNode(0);
+        fakeHead.next = head;
+        ListNode curNode = fakeHead.next;
+        while (curNode != null && curNode.next != null) {
+            ListNode reverseHead = curNode.next;
+            curNode.next = reverseHead.next;
+            reverseHead.next = fakeHead.next;
+            fakeHead.next = reverseHead;
+        }
+        return fakeHead.next;
+    }
+}
+
+
+
+
+
+
+
+
+
+######################参考解答########################
+# python：86%
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution(object):
+    def reverseList(self, head):
+        """
+        :type head: ListNode
+        :rtype: ListNode
+        """
+        if head is None or head.next is None:
+            return head
+        
+        p = self.reverseList(head.next)
+        head.next.next = head
+        head.next = None
+        return p
+
+
+
+
+
+
+
+
+# C++：
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        ListNode* mid = head;
+        while(head && mid->next){
+            ListNode* tmp = mid->next;
+            mid->next = mid->next->next;
+            tmp->next = head;
+            head = tmp;
+        }
+        return head;
+    }
+};
+
+
+
+
+
+
+# Java：
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode reverseList(ListNode head) {
+        ListNode prev = null;
+        ListNode curr = head;
+        while(curr != null){
+            ListNode nextTemp = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = nextTemp;            
+        }
+        return prev;
+    }
+}
+
+
+
+
+
+
+
