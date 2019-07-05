@@ -68,7 +68,7 @@ class Solution:
 
 
 
-# 参考解答
+# 参考解答：
 
 class Solution(object):
     def twoCitySchedCost(self, costs):
