@@ -1,0 +1,204 @@
+删除链表中等于给定值 val 的所有节点。
+
+示例:
+
+输入: 1->2->6->3->4->5->6, val = 6
+输出: 1->2->3->4->5
+
+
+
+
+
+
+
+
+
+##################自答##################
+# python3：97%
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    def removeElements(self, head: ListNode, val: int) -> ListNode:
+        fakeHead = ListNode(0)
+        fakeHead.next = head
+        curHead = fakeHead
+        while curHead and curHead.next:
+            if curHead.next.val == val:
+                curHead.next = (curHead.next).next
+            else:
+                curHead = curHead.next
+        return fakeHead.next
+
+
+
+
+
+
+# C++：96%
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* removeElements(ListNode* head, int val) {
+        ListNode* fakeHead = new ListNode(0);
+        fakeHead->next = head;
+        ListNode* preHead = fakeHead;
+        while (preHead->next) {
+            if (preHead->next->val == val) {
+                preHead->next = preHead->next->next;
+            } else {
+                preHead = preHead->next;
+            }
+        }
+        return fakeHead->next;
+    }
+};
+
+
+
+
+
+
+
+# Java：100%
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode removeElements(ListNode head, int val) {
+        ListNode fakeHead = new ListNode(0);
+        fakeHead.next = head;
+        ListNode preHead = fakeHead;
+        while (preHead.next != null) {
+            if (preHead.next.val == val) {
+                preHead.next = preHead.next.next;
+            } else {
+                preHead = preHead.next;
+            }
+        }
+        return fakeHead.next;
+    }
+}
+
+
+
+
+
+
+
+
+##############参考解答###############
+# python3：
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    def removeElements(self, head: ListNode, val: int) -> ListNode:
+        node = ListNode(None)
+        node.next = head
+        p = node
+        while p.next:
+            if p.next.val != val:
+                p = p.next
+            else:
+                p.next = p.next.next
+        return node.next
+
+
+
+
+
+
+
+# C++：
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* removeElements(ListNode* head, int val) {
+        if(!head)
+            return NULL;
+        while (head != NULL && head->val == val) 
+            head = head->next;
+        if(!head)
+            return NULL;
+        ListNode *nhead=head;
+        while(head->next){
+            if(head->next->val==val)
+                head->next=head->next->next;
+            else
+                head=head->next;
+        }
+        return nhead;
+    }
+};
+
+
+
+
+
+# Java：
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode removeElements(ListNode head, int val) {
+        ListNode savedHead = head;
+        //head的上一个node
+        ListNode last = head;
+        
+        //解决第一个node值就是val的问题
+        while(head != null && head.val == val){
+            head = head.next;
+            savedHead = head;
+        }
+      
+        while(head != null){
+              
+            if(head.val == val){
+                last.next = head.next;
+                head = head.next;
+            }else{
+                last = head;
+                head = head.next;
+            }
+            
+        }
+        
+        return savedHead;
+    }
+}
+
+
+
+
+
