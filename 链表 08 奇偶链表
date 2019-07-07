@@ -1,0 +1,232 @@
+给定一个单链表，把所有的奇数节点和偶数节点分别排在一起。请注意，这里的奇数节点和偶数节点指的是节点编号的奇偶性，而不是节点的值的奇偶性。
+
+请尝试使用原地算法完成。你的算法的空间复杂度应为 O(1)，时间复杂度应为 O(nodes)，nodes 为节点总数。
+
+示例 1:
+
+输入: 1->2->3->4->5->NULL
+输出: 1->3->5->2->4->NULL
+示例 2:
+
+输入: 2->1->3->5->6->4->7->NULL 
+输出: 2->3->6->7->1->5->4->NULL
+说明:
+
+应当保持奇数节点和偶数节点的相对顺序。
+链表的第一个节点视为奇数节点，第二个节点视为偶数节点，以此类推。
+
+
+
+
+
+
+###################自答################
+# python：11%
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution(object):
+    def oddEvenList(self, head):
+        """
+        :type head: ListNode
+        :rtype: ListNode
+        """
+        fakeHead = ListNode(0)
+        fakeHead.next = head
+        if fakeHead.next == None or fakeHead.next.next == None:
+            return fakeHead.next
+        
+        evenHead = fakeHead.next.next
+        oddNode = fakeHead.next
+        evenNode = fakeHead.next.next
+        while evenNode and evenNode.next:
+            oddNode.next = evenNode.next
+            evenNode.next = evenNode.next.next
+            oddNode = oddNode.next
+            evenNode = evenNode.next
+        oddNode.next = evenHead
+        return fakeHead.next
+
+
+
+
+
+
+
+# C++:20%
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* oddEvenList(ListNode* head) {
+        ListNode* fakeHead = new ListNode(0);
+        fakeHead->next = head;
+        if (fakeHead->next == NULL or fakeHead->next->next == NULL) return fakeHead->next;
+        ListNode* evenHead = fakeHead->next->next;
+        ListNode* oddNode = fakeHead->next;
+        ListNode* evenNode = fakeHead->next->next;
+        while (evenNode and evenNode->next) {
+            oddNode->next = evenNode->next;
+            evenNode->next = evenNode->next->next;
+            oddNode = oddNode->next;
+            evenNode = evenNode->next;
+        }
+        oddNode->next = evenHead;
+        return fakeHead->next;
+    }
+};
+
+
+
+
+
+# Java：99%
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode oddEvenList(ListNode head) {
+        ListNode fakeHead = new ListNode(0);
+        fakeHead.next = head;
+        if (fakeHead.next == null || fakeHead.next.next == null) return fakeHead.next;
+        ListNode evenHead = fakeHead.next.next;
+        ListNode oddNode = fakeHead.next;
+        ListNode evenNode = fakeHead.next.next;
+        while (evenNode != null && evenNode.next != null) {
+            oddNode.next = evenNode.next;
+            evenNode.next = evenNode.next.next;
+            oddNode = oddNode.next;
+            evenNode = evenNode.next;
+        }
+        oddNode.next = evenHead;
+        return fakeHead.next;
+    }
+}
+
+
+
+
+
+
+###################参考解答################
+# python：
+class Solution(object):
+    def oddEvenList(self, head):
+        """
+        :type head: ListNode
+        :rtype: ListNode
+        """
+        oddRoot = odd = ListNode(None)
+        evenRoot = even = ListNode(None)
+        num = 1
+        p = head
+        while p:
+            tmp = p.next
+            p.next = None
+            if num % 2 == 1:
+                odd.next = p
+                odd = p
+            else:
+                even.next = p
+                even = p
+            p = tmp
+            num += 1
+        odd.next = evenRoot.next
+        return oddRoot.next
+
+
+
+
+
+
+
+# C++:
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* oddEvenList(ListNode* head) {
+        if (head == nullptr || head->next == nullptr) return head;
+        ListNode* oddhead = new ListNode(head->val);
+        ListNode* odd = oddhead;
+        ListNode* evenhead = new ListNode(head->next->val);
+        ListNode* even = evenhead;
+        int i = 1;
+        head = head->next->next;
+        while ( head != nullptr )
+        {
+            if (i%2)
+            {
+                odd->next = new ListNode(head->val);
+                odd = odd->next;
+            }
+            else
+            {
+                even->next = new ListNode(head->val);
+                even = even->next;
+            }
+            head = head->next;
+            i++;
+        }
+        odd->next = evenhead;
+        return oddhead;
+    }
+};
+
+
+
+
+
+# Java：
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode oddEvenList(ListNode head) {
+        if(head==null ||head.next == null){
+            return head;
+        }
+        ListNode odd = head, even = head.next,evenh = even;
+        while(even !=null && even.next!=null){
+            odd.next = even.next;
+            odd = odd.next;
+            even.next = odd.next;
+            even = even.next;
+        }
+        odd.next = evenh;
+        return head;
+    }
+}
+
+
+
+
+
+
+
+
