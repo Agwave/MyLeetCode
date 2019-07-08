@@ -1,0 +1,289 @@
+请判断一个链表是否为回文链表。
+
+示例 1:
+
+输入: 1->2
+输出: false
+示例 2:
+
+输入: 1->2->2->1
+输出: true
+进阶：
+你能否用 O(n) 时间复杂度和 O(1) 空间复杂度解决此题？
+
+
+
+
+
+
+
+
+
+
+
+#######################自答################
+# python3：67%
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    def isPalindrome(self, head: ListNode) -> bool:
+        fakeHead = ListNode(0)
+        fakeHead.next = head
+        slower = faster = fakeHead.next
+        if faster == None or faster.next == None:
+            return True
+        
+        # 双指针定位
+        while faster.next and faster.next.next:
+            slower = slower.next
+            faster = faster.next.next
+        
+        # 后半部分反转链表
+        midHead = ListNode(0)
+        midHead.next = slower.next
+        curNode = slower.next
+        while curNode.next:
+            nextNode = curNode.next
+            curNode.next = nextNode.next
+            nextNode.next = midHead.next
+            midHead.next = nextNode
+            slower.next = nextNode
+        
+        # 前后半部分比较
+        slower = slower.next
+        slowest = fakeHead.next
+        flag = True
+        while slower:
+            if slower.val != slowest.val:
+                flag = False
+                break
+            slower = slower.next
+            slowest = slowest.next
+        return flag
+
+
+
+
+
+
+# C++：25%
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool isPalindrome(ListNode* head) {
+        ListNode* fakeHead = new ListNode(0);
+        fakeHead->next = head;
+        ListNode* slower = fakeHead->next;
+        ListNode* faster = fakeHead->next;
+        if (faster == NULL || faster->next == NULL) return true;
+        
+        while (faster->next && faster->next->next) {
+            slower = slower->next;
+            faster = faster->next->next;
+        }
+        
+        ListNode* midHead = new ListNode(0);
+        midHead->next = slower->next;
+        ListNode* curNode = slower->next;
+        while (curNode->next) {
+            ListNode* nextNode = curNode->next;
+            curNode->next = curNode->next->next;
+            nextNode->next = midHead->next;
+            midHead->next = nextNode;
+            slower->next = midHead->next;
+        }
+        
+        slower = slower->next;
+        ListNode* slowest = fakeHead->next;
+        bool flag = true;
+        while (slower) {
+            if (slower->val != slowest->val) {
+                flag = false;
+                break;
+            }
+            slower = slower->next;
+            slowest = slowest->next;
+        }
+        return flag;
+    }
+};
+
+
+
+
+
+
+# Java：68%
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+	public boolean isPalindrome(ListNode head) {
+		if (head == null || head.next == null) {
+			return true;
+		}
+
+		if (head.next.next == null) {
+			return head.val == head.next.val;
+		}
+
+		ListNode fast = head.next;
+		ListNode slow = head;
+
+		while (fast.next != null) {
+			// 不停的从slow的后一个开始遍历，知道找到值相同的节点
+			// 一次完成后，再移动到原节点的下一个节点开始，继续重复上面的步骤
+			if (fast.next.val == slow.val) {
+				if (fast.next.next != null) {
+					return false;
+				}
+				fast.next = null;
+				slow = slow.next;
+				fast = slow.next;
+				if (fast == null || fast.val == slow.val) {
+					return true;
+				}
+			} else {
+				fast = fast.next;
+			}
+		}
+		return false;
+	}
+
+}
+
+
+
+
+
+
+
+
+#####################参考解答#################
+# python3：
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    def isPalindrome(self, head: ListNode) -> bool:
+        if head == None or head.next == None:
+            return True
+        target = []
+        while head:
+            target.append(head.val)
+            head=head.next
+        p = (len(target)-1)//2+1
+        q = (len(target))//2
+        
+        return target[0:p]==target[q:len(target)][::-1]
+
+
+
+
+
+
+# C++：
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool isPalindrome(ListNode* head) {
+        ListNode* slow = head, *fast = head,  *prev = nullptr;
+        while (fast){//find mid node
+            slow = slow->next;
+            fast = fast->next ? fast->next->next: fast->next;
+        }
+        while (slow){//reverse
+            ListNode* ovn = slow->next;
+            slow->next = prev;
+            prev = slow;
+            slow = ovn;
+        }
+        while (head && prev){//check
+            if (head->val != prev->val){
+                return false;
+            }
+            head = head->next;
+            prev = prev->next;
+        }
+        return true;
+    }
+};
+
+
+
+
+# Java：
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+	public boolean isPalindrome(ListNode head) {
+		if (head == null || head.next == null) {
+			return true;
+		}
+
+		if (head.next.next == null) {
+			return head.val == head.next.val;
+		}
+
+		ListNode fast = head.next;
+		ListNode slow = head;
+
+		while (fast.next != null) {
+			// 不停的从slow的后一个开始遍历，知道找到值相同的节点
+			// 一次完成后，再移动到原节点的下一个节点开始，继续重复上面的步骤
+			if (fast.next.val == slow.val) {
+				if (fast.next.next != null) {
+					return false;
+				}
+				fast.next = null;
+				slow = slow.next;
+				fast = slow.next;
+				if (fast == null || fast.val == slow.val) {
+					return true;
+				}
+			} else {
+				fast = fast.next;
+			}
+		}
+		return false;
+	}
+
+}
+
+
+
+
+
+
