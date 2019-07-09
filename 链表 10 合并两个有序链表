@@ -1,0 +1,246 @@
+将两个有序链表合并为一个新的有序链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。 
+
+示例：
+
+输入：1->2->4, 1->3->4
+输出：1->1->2->3->4->4
+
+
+
+
+
+
+
+
+######################自答########################3
+# python3：69
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    def mergeTwoLists(self, l1: ListNode, l2: ListNode) -> ListNode:
+        fakeHead = ListNode(0)
+        p = fakeHead
+        p1 = l1
+        p2 = l2
+        while p1 and p2:
+            if p1.val <= p2.val:
+                p.next = ListNode(p1.val)
+                p1 = p1.next
+            else:
+                p.next = ListNode(p2.val)
+                p2 = p2.next
+            p = p.next
+        if p1:
+            p.next = p1
+        if p2:
+            p.next = p2
+        return fakeHead.next
+
+
+
+
+
+
+# C++：90%
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+        ListNode* fakeHead = new ListNode(0);
+        ListNode* p = fakeHead;
+        ListNode* p1 = l1;
+        ListNode* p2 = l2;
+        while (p1 && p2) {
+            if (p1->val <= p2->val) {
+                p->next = p1;
+                p1 = p1->next;
+            } else {
+                p->next = p2;
+                p2 = p2->next;
+            }
+            p = p->next;
+        }
+        if (p1) p->next = p1;
+        if (p2) p->next = p2;
+        return fakeHead->next;
+    }
+};
+
+
+
+
+
+
+
+# Java：92%
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        ListNode fakeHead = new ListNode(0);
+        ListNode p = fakeHead;
+        ListNode p1 = l1;
+        ListNode p2 = l2;
+        
+        while (p1 != null && p2 != null) {
+            if (p1.val <= p2.val) {
+                p.next = p1;
+                p1 = p1.next;
+            } else {
+                p.next = p2;
+                p2 = p2.next;
+            }
+            p = p.next;
+        }
+        
+        if (p1 != null) p.next = p1;
+        if (p2 != null) p.next = p2;
+        return fakeHead.next;
+    }
+}
+
+
+
+
+
+
+
+
+
+######################参考解答########################3
+# python3：
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    def mergeTwoLists(self, l1: ListNode, l2: ListNode) -> ListNode:
+        dummy = ListNode(None)
+        cur = dummy
+        while l1 and l2:
+            if l1.val <l2.val:
+                cur.next = l1
+                l1 = l1.next
+            else:
+                cur.next = l2
+                l2 = l2.next
+            cur = cur.next
+        if not l1:
+            cur.next = l2
+        if not l2:
+            cur.next = l1
+        
+        return dummy.next
+
+
+
+
+
+
+# C++：
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+        if(l1==NULL)
+        return l2;
+    if(l2==NULL)
+        return l1;
+    if(l1->val < l2->val){
+        l1->next = mergeTwoLists(l1->next,l2);
+        return l1;
+    }else{
+        l2->next = mergeTwoLists(l1,l2->next);
+        return l2;
+    }
+    }
+};
+
+
+
+
+
+
+# Java：
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        if (l1 == null){
+            return l2;
+        }
+
+        if (l2 == null){
+            return l1;
+        }
+
+        ListNode head = new ListNode(-1), temp = head;
+
+        while (l1 != null && l2 != null){
+            if (l1.val < l2.val){
+                temp.next = new ListNode(l1.val);
+                temp = temp.next;
+
+                l1 = l1.next;
+            } else {
+                temp.next = new ListNode(l2.val);
+                temp = temp.next;
+
+                l2 = l2.next;
+            }
+        }
+        
+        while (l1 != null){
+            temp.next = new ListNode(l1.val);
+            temp = temp.next;
+
+            l1 = l1.next;
+        }
+
+        while (l2 != null){
+            temp.next = new ListNode(l2.val);
+            temp = temp.next;
+
+            l2 = l2.next;
+        }
+
+        return head.next;
+    }
+}
+
+
+
+
+
