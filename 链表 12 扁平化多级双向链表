@@ -1,0 +1,334 @@
+您将获得一个双向链表，除了下一个和前一个指针之外，它还有一个子指针，可能指向单独的双向链表。这些子列表可能有一个或多个自己的子项，依此类推，生成多级数据结构，如下面的示例所示。
+
+扁平化列表，使所有结点出现在单级双链表中。您将获得列表第一级的头部。
+
+ 
+
+示例:
+
+输入:
+ 1---2---3---4---5---6--NULL
+         |
+         7---8---9---10--NULL
+             |
+             11--12--NULL
+
+输出:
+1-2-3-7-8-11-12-9-10-4-5-6-NULL
+ 
+
+以上示例的说明:
+
+给出以下多级双向链表:
+
+
+ 
+
+我们应该返回如下所示的扁平双向链表:
+
+
+
+
+
+
+####################自答#################
+# python3：42%
+"""
+# Definition for a Node.
+class Node:
+    def __init__(self, val, prev, next, child):
+        self.val = val
+        self.prev = prev
+        self.next = next
+        self.child = child
+"""
+class Solution:
+    def flatten(self, head: 'Node') -> 'Node':
+        fakeHead = ListNode(0)
+        fakeHead.next = head
+        curNode = fakeHead.next
+        stack = []
+        while curNode:
+            if curNode.child:
+                if curNode.next:
+                    stack.append(curNode.next)
+                nextNode = curNode.child
+                curNode.child = None
+                curNode.next = nextNode
+                nextNode.prev = curNode
+                curNode = curNode.next
+            else:
+                if curNode.next:
+                    curNode = curNode.next
+                else:
+                    if len(stack) > 0:
+                        nextNode = stack.pop()
+                        curNode.next = nextNode
+                        nextNode.prev = curNode
+                        curNode = curNode.next
+                    else:
+                        break
+        return fakeHead.next
+
+
+
+
+
+
+
+
+# C++：9%
+/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    Node* prev;
+    Node* next;
+    Node* child;
+
+    Node() {}
+
+    Node(int _val, Node* _prev, Node* _next, Node* _child) {
+        val = _val;
+        prev = _prev;
+        next = _next;
+        child = _child;
+    }
+};
+*/
+class Solution {
+public:
+    Node* flatten(Node* head) {
+        Node* fakeHead = new Node(0, NULL, NULL, NULL);
+        Node* curNode = fakeHead;
+        Node* nextNode = head;
+        stack<Node*> stack;
+        while (nextNode || !stack.empty()) {
+            if (nextNode == NULL) {
+                nextNode = stack.top();
+                stack.pop();            
+            }
+            curNode->next = new Node(nextNode->val, curNode, NULL, NULL);
+            curNode = curNode->next;
+            if (nextNode->child) {
+                if (nextNode->next) {
+                    stack.push(nextNode->next);
+                }
+                nextNode = nextNode->child;
+            } else {
+                nextNode = nextNode->next;
+            }
+        }
+        if (fakeHead->next) fakeHead->next->prev = NULL;
+        return fakeHead->next;
+    }
+};
+
+
+
+
+
+
+
+# Java：91%
+/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public Node prev;
+    public Node next;
+    public Node child;
+
+    public Node() {}
+
+    public Node(int _val,Node _prev,Node _next,Node _child) {
+        val = _val;
+        prev = _prev;
+        next = _next;
+        child = _child;
+    }
+};
+*/
+class Solution {
+    public Node flatten(Node head) {
+        Node fakeHead = new Node(0, null, head, null);
+        Node curNode = fakeHead.next;
+        Node nextNode;
+        Stack<Node> stack = new Stack();
+        while (curNode != null) {
+            if (curNode.child != null) {
+                if (curNode.next != null) {
+                    stack.push(curNode.next);
+                }
+                nextNode = curNode.child;
+                curNode.child = null;
+                curNode.next = nextNode;
+                nextNode.prev = curNode;
+                curNode = curNode.next;
+            } else {
+                if (curNode.next != null) {
+                    curNode = curNode.next;
+                } else {
+                    if (!stack.empty()){
+                        nextNode = stack.pop();
+                        curNode.next = nextNode;
+                        nextNode.prev = curNode;
+                        curNode = curNode.next;
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+        return fakeHead.next;
+    }
+}
+
+
+
+
+
+
+
+###################参考解答#################
+# python3：
+"""
+# Definition for a Node.
+class Node:
+    def __init__(self, val, prev, next, child):
+        self.val = val
+        self.prev = prev
+        self.next = next
+        self.child = child
+"""
+class Solution:
+    def flatten(self, head: 'Node') -> 'Node':
+        dummy = Node(0,None,head,None)
+        stack = []
+        node = head
+        last = dummy
+        while node or stack:
+            if not node:
+                node = stack.pop()
+            last.next = Node(node.val, last, node.next, None)
+            last = last.next
+            if node.child: 
+                if node.next:
+                    stack.append(node.next)
+                node = node.child
+            else:
+                node = node.next
+        if dummy.next:
+            dummy.next.prev = None
+        return dummy.next
+
+
+
+
+
+
+
+# C++：
+/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    Node* prev;
+    Node* next;
+    Node* child;
+
+    Node() {}
+
+    Node(int _val, Node* _prev, Node* _next, Node* _child) {
+        val = _val;
+        prev = _prev;
+        next = _next;
+        child = _child;
+    }
+};
+*/
+class Solution {
+public:
+    Node* flatten(Node* head) {
+        Node* cur = head;
+        while(cur){
+            if(cur->child){
+                Node* next = cur->next;
+                Node* last = cur->child;
+                while(last->next) last = last->next;
+                cur->next = cur->child;
+                cur->next->prev = cur;
+                cur->child = nullptr;
+                if(next){
+                    last->next = next;
+                    next->prev = last;
+                }
+            }
+            cur = cur->next;
+        }
+        return head;
+    }
+};
+
+
+
+
+
+# Java：
+/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public Node prev;
+    public Node next;
+    public Node child;
+
+    public Node() {}
+
+    public Node(int _val,Node _prev,Node _next,Node _child) {
+        val = _val;
+        prev = _prev;
+        next = _next;
+        child = _child;
+    }
+};
+*/
+class Solution {
+    public Node __flatten(Node head, Node tail){
+        if(head == null) return tail;
+        Node ret = head;
+        while(head.next != null){
+            if(head.child != null){
+                Node tmp = head.next;
+                head.next = __flatten(head.child, tmp);
+                head.next.prev = head;
+                head.child = null;
+                head = tmp;
+            } else {
+                head = head.next;
+            }
+        }
+        if(head.child != null){
+            head.next = __flatten(head.child, tail);
+            head.next.prev = head;
+            head.child = null;
+        } else {
+            if(tail != null){
+                head.next = tail;
+                tail.prev = head;
+            }
+        }
+        return ret;
+    }
+    public Node flatten(Node head) {
+        return __flatten(head, null);
+    }
+}
+
+
+
+
+
+
