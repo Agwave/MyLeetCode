@@ -27,7 +27,8 @@
 
 
 ###################自答###################3
-# python3：96%
+# python3：99%
+"""
 """
 # Definition for a Node.
 class Node:
@@ -38,23 +39,117 @@ class Node:
 """
 class Solution:
     def copyRandomList(self, head: 'Node') -> 'Node':
-        dummy = Node(0, None, None)
-        ori = head
-        cp = dummy
-        ori_cp_dict = {}   
-        while(ori):
-            cp.next = Node(ori.val, None, None)
-            cp.next.random = ori.random
-            ori_cp_dict[ori] = cp.next
-            ori = ori.next
-            cp = cp.next
-        cp = dummy.next
-        while(cp):
-            if cp.random:
-                cp.random = ori_cp_dict[cp.random]
-            cp = cp.next 
-        return dummy.next
-        
+        fakeHead = Node(0, None, None)
+        curNode = fakeHead
+        oriNode = head
+        old_to_new = {}
+        while oriNode:
+            curNode.next = Node(oriNode.val, None, None)
+            curNode.next.random = oriNode.random
+            old_to_new[oriNode] = curNode.next
+            curNode = curNode.next
+            oriNode = oriNode.next
+        curNode = fakeHead.next
+        while curNode:
+            if curNode.random:
+                curNode.random = old_to_new[curNode.random]
+            curNode = curNode.next
+        return fakeHead.next
+
+
+
+
+
+
+
+# C++：89%
+/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    Node* next;
+    Node* random;
+
+    Node() {}
+
+    Node(int _val, Node* _next, Node* _random) {
+        val = _val;
+        next = _next;
+        random = _random;
+    }
+};
+*/
+class Solution {
+public:
+    Node* copyRandomList(Node* head) {
+        Node* fakeHead = new Node(0, nullptr, nullptr);
+        Node* curNode = fakeHead;
+        Node* oriNode = head;
+        map<Node*, Node*> old_to_new;
+        while (oriNode) {
+            curNode->next = new Node(oriNode->val, nullptr, nullptr);
+            curNode->next->random = oriNode->random;
+            old_to_new[oriNode] = curNode->next;
+            curNode = curNode->next;
+            oriNode = oriNode->next;
+        }
+        curNode = fakeHead->next;
+        while (curNode) {
+            if (curNode->random) curNode->random = old_to_new[curNode->random];
+            curNode = curNode->next;
+        }
+        return fakeHead->next;
+    }
+};
+
+
+
+
+
+
+
+# Java：100%
+/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public Node next;
+    public Node random;
+
+    public Node() {}
+
+    public Node(int _val,Node _next,Node _random) {
+        val = _val;
+        next = _next;
+        random = _random;
+    }
+};
+*/
+class Solution {
+    public Node copyRandomList(Node head) {
+        Node fakeHead = new Node(0, null, null);
+        Node curNode = fakeHead;
+        Map<Node, Node> old_to_new = new HashMap<>();
+        Node oriNode = head;
+        while (oriNode != null) {
+            curNode.next = new Node(oriNode.val, null, null);
+            curNode.next.random = oriNode.random;
+            old_to_new.put(oriNode, curNode.next);
+            curNode = curNode.next;
+            oriNode = oriNode.next;
+        }
+        curNode = fakeHead.next;
+        while (curNode != null) {
+            if (curNode.random != null) curNode.random = old_to_new.get(curNode.random);
+            curNode = curNode.next;
+        }
+        return fakeHead.next;
+    }
+}
+
+
+
         
  
  
@@ -91,3 +186,128 @@ class Solution:
             cur.next = nex.next
             cur = nex
         return res
+
+
+
+
+
+
+
+# C++：
+/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    Node* next;
+    Node* random;
+
+    Node() {}
+
+    Node(int _val, Node* _next, Node* _random) {
+        val = _val;
+        next = _next;
+        random = _random;
+    }
+};
+*/
+class Solution {
+public:
+    Node* copyRandomList(Node* head) {
+        vector<Node*> f,g;
+        Node* temp=head,*ne;
+        while(temp!=NULL)
+        {
+            f.push_back(temp);
+            ne=new Node(temp->val,temp->next,temp->random);
+            g.push_back(ne);
+            temp=temp->next;
+        }
+        int n=f.size();
+        temp=NULL;
+        g.push_back(temp);
+        Node* x,*y;
+        for(int i=0;i<n;i++)
+        {
+            g[i]->next=g[i+1];
+            x=f[i]->random;
+            if(x!=NULL)
+            {
+                for(int j=0;j<n;j++)
+                {
+                    if(x==f[j])
+                    {
+                        g[i]->random=g[j];
+                        break;
+                    }
+                }
+            }
+        }
+        return g[0];
+    }
+};
+
+
+
+
+
+
+
+
+
+# Java：
+/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public Node next;
+    public Node random;
+
+    public Node() {}
+
+    public Node(int _val,Node _next,Node _random) {
+        val = _val;
+        next = _next;
+        random = _random;
+    }
+};
+*/
+class Solution {
+    public Node copyRandomList(Node head) {
+        if(head == null) return null;
+        Node old_node = head;
+        while(old_node != null){
+            Node new_node =  new Node(old_node.val,null,null);
+            new_node.next = old_node.next;
+            old_node.next = new_node;
+            old_node = old_node.next.next;
+        }
+        
+        old_node = head;
+        while(old_node != null){
+            old_node.next.random = old_node.random == null ? null:old_node.random.next;
+            old_node = old_node.next.next;
+        }
+        
+        Node new_node = head.next;
+        Node new_prev = new_node;
+         old_node = head;
+        while(old_node != null){
+            old_node.next = new_node.next;
+            new_node.next = old_node.next == null ? null :old_node.next.next;
+            
+            old_node = old_node.next;
+            new_node = new_node.next;
+            
+        }
+        
+        return new_prev;
+        
+    }
+
+
+        
+ 
+ 
+ 
+ 
