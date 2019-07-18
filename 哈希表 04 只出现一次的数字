@@ -1,0 +1,135 @@
+给定一个非空整数数组，除了某个元素只出现一次以外，其余每个元素均出现两次。找出那个只出现了一次的元素。
+
+说明：
+
+你的算法应该具有线性时间复杂度。 你可以不使用额外空间来实现吗？
+
+示例 1:
+
+输入: [2,2,1]
+输出: 1
+示例 2:
+
+输入: [4,1,2,1,2]
+输出: 4
+
+
+
+
+
+
+
+
+
+
+
+###################自答################
+# python3：81%
+class Solution:
+    def singleNumber(self, nums: List[int]) -> int:
+        ret_set = set()
+        for num in nums:
+            if num in ret_set:
+                ret_set.remove(num)
+            else:
+                ret_set.add(num)
+        for ret in ret_set:
+            return ret
+
+
+
+
+
+
+
+# C++：8%
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
+        unordered_set<int> ret_set;
+        for (int num: nums) {
+            if (ret_set.count(num) == 0) {
+                ret_set.insert(num);
+            } else {
+                ret_set.erase(num);
+            }
+        }
+        return *ret_set.begin();
+    }
+};class Solution {
+    public int singleNumber(int[] nums) {
+            int x = 0;
+        for (int i : nums) {
+            x ^= i;
+        }
+        return x;
+    }
+}
+
+
+
+
+
+
+# Java：15%
+class Solution {
+    public int singleNumber(int[] nums) {
+        Set<Integer> ret_set = new HashSet<>();
+        for (int num: nums) {
+            if (ret_set.contains(num)) {
+                ret_set.remove(num);
+            } else {
+                ret_set.add(num);
+            }
+        }
+        Iterator<Integer> it = ret_set.iterator();
+        return it.next();
+    }
+}
+
+
+
+
+
+
+
+##################参考解答####################
+# Python3：
+class Solution:
+    def singleNumber(self, nums: List[int]) -> int:
+        return 2*sum(set(nums)) -sum(nums)
+
+
+
+
+
+
+
+
+# C++：
+class Solution {
+public:
+    int singleNumber(vector<int>& nums)
+    {
+       int ans = nums[0];
+        for(int i = 1; i < nums.size(); ++ i)
+        {
+            ans = ans ^ nums[i];
+        }
+        return ans;
+    }
+};
+
+
+
+
+
+# Java：
+
+
+
+
+
+
+
+
