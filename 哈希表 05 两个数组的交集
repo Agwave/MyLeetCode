@@ -1,0 +1,183 @@
+给定两个数组，编写一个函数来计算它们的交集。
+
+示例 1:
+
+输入: nums1 = [1,2,2,1], nums2 = [2,2]
+输出: [2]
+示例 2:
+
+输入: nums1 = [4,9,5], nums2 = [9,4,9,8,4]
+输出: [9,4]
+说明:
+
+输出结果中的每个元素一定是唯一的。
+我们可以不考虑输出结果的顺序。
+
+
+
+
+
+
+
+#################自答##################3
+# python3：90%
+class Solution(object):
+    def intersection(self, nums1, nums2):
+        """
+        :type nums1: List[int]
+        :type nums2: List[int]
+        :rtype: List[int]
+        """
+        ret = []
+        nums1_set = set(nums1)
+        nums2_set = set(nums2)
+        for num in nums1_set:
+            if num in nums2_set:
+                ret.append(num)
+        return ret
+
+
+
+
+
+
+
+# C++：66%
+class Solution {
+public:
+    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+        vector<int> ret;
+        unordered_set<int> nums1_set, nums2_set;
+        for (int num: nums1) {
+            if (nums1_set.count(num) == 0) {
+                nums1_set.insert(num);
+            }
+        }
+        for (int num: nums2) {
+            if (nums2_set.count(num) == 0) {
+                nums2_set.insert(num);
+            }
+        }
+        for (int num: nums1_set) {
+            if (nums2_set.count(num) != 0) {
+                ret.push_back(num);
+            }
+        }
+        return ret;
+    }
+};
+
+
+
+
+
+
+
+# Java：61%
+class Solution {
+    public int[] intersection(int[] nums1, int[] nums2) {
+        int length = nums1.length <= nums2.length ? nums1.length : nums2.length;
+        int[] temp = new int[length];
+        int count = 0;
+        Set<Integer> nums1_set = new HashSet<>();
+        Set<Integer> nums2_set = new HashSet<>();
+        for (int num: nums1) {
+            if (!nums1_set.contains(num)) {
+                nums1_set.add(num);
+            }
+        }
+        for (int num: nums2) {
+            if (!nums2_set.contains(num)) {
+                nums2_set.add(num);
+            }
+        }
+        for (int num: nums1_set) {
+            if (nums2_set.contains(num)) {
+                temp[count] = num;
+                count++;
+            }
+        }
+        int[] ret = new int[count];
+        for (int i = 0; i < count; ++i) {
+            ret[i] = temp[i];
+        }
+        return ret;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+#################参考解答##################3
+# python3：
+class Solution(object):
+    def intersection(self, nums1, nums2):
+        """
+        :type nums1: List[int]
+        :type nums2: List[int]
+        :rtype: List[int]
+        """
+        return set(nums1) & set(nums2)
+
+
+
+
+
+
+
+# C++：
+class Solution {
+public:
+    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) 
+    {
+        set<int> num = {};
+        vector<int> re = {};
+        for(int i=0;i<nums1.size();i++)
+            num.insert(nums1[i]);
+        for(int i=0;i<nums2.size();i++)
+            if(num.find(nums2[i]) != num.end())
+                re.push_back(nums2[i]);
+        set<int> st(re.begin(), re.end());
+        re.assign(st.begin(), st.end());
+        return re;
+    }
+};
+
+
+
+
+
+
+# Java：
+class Solution {
+public int[] intersection(int[] nums1, int[] nums2) {
+
+        boolean []A = new boolean[1000];
+        for(int i = 0 ;i<nums1.length;i++)
+        {
+        	A[nums1[i]]=true;
+        }
+        int k = 0 ; 
+        for(int i = 0 ; i <nums2.length;i++)
+        {
+        	if(A[nums2[i]])
+        	{
+        		nums1[k] = nums2[i];
+        		k++;
+        		A[nums2[i]] = false;
+        	}
+        }
+        int[] B = new int[k];
+        for(int i = 0 ; i <k;i++)
+        {
+        	B[i]=nums1[i];
+        }
+        return B ; 
+    }
+}
