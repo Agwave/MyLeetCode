@@ -1,0 +1,199 @@
+编写一个算法来判断一个数是不是“快乐数”。
+
+一个“快乐数”定义为：对于一个正整数，每一次将该数替换为它每个位置上的数字的平方和，然后重复这个过程直到这个数变为 1，也可能是无限循环但始终变不到 1。如果可以变为 1，那么这个数就是快乐数。
+
+示例: 
+
+输入: 19
+输出: true
+解释: 
+12 + 92 = 82
+82 + 22 = 68
+62 + 82 = 100
+12 + 02 + 02 = 1
+
+
+
+
+
+
+
+
+
+
+#################自答##################
+# python3：75%
+class Solution:
+    def isHappy(self, n: int) -> bool:
+        # 注意不快乐数
+        results = []
+        while n != 1:
+            res = 0
+            while n > 0:
+                res += (n%10)**2
+                n = n//10
+            if res in results:
+                return False
+            else:
+                results.append(res)
+            n = res
+        return True
+
+
+
+
+
+
+
+# C++：70%
+class Solution {
+public:
+    bool isHappy(int n) {
+        unordered_set<int> n_set;
+        bool isHappy = true;
+        while (n != 1) {
+            if (n_set.count(n) == 0) {
+                n_set.insert(n);
+                n = next_n(n);
+            } else {
+                isHappy = false;
+                break;
+            }
+        }
+        return isHappy;
+    }
+    
+    int next_n(int n) {
+        int new_n = 0, m;
+        while (n) {
+            m = n % 10;
+            new_n += pow(m, 2);
+            n = n / 10;
+        }
+        return new_n;
+    }
+};
+
+
+
+
+
+
+
+
+# Java：44%
+class Solution {
+    public boolean isHappy(int n) {
+        Set<Integer> n_set = new HashSet<>();
+        boolean isHappy = true;
+        while (n != 1) {
+            if (!n_set.contains(n)) {
+                n_set.add(n);
+                n = next(n);
+            } else {
+                isHappy = false;
+                break;
+            }
+        }
+        return isHappy;
+    }
+    
+    private int next(int n) {
+        int new_n = 0, m;
+        while (n != 0) {
+            m = n % 10;
+            new_n += Math.pow(m, 2);
+            n = n / 10;
+        }
+        return new_n;
+    }
+}
+
+
+
+
+
+
+
+################参考解答###############
+# python3：
+def next_n(n):
+            new_n = 0
+            while n:
+                m = n % 10
+                n = n // 10
+                new_n += pow(m, 2)
+            return new_n
+
+
+
+
+
+
+# C++：
+class Solution {
+public:
+    int cal(int n) //计算n各个位平方和
+    {
+        int result = 0;
+        int pop;
+        while(n != 0)
+        {
+            pop = n % 10;
+            result += pop * pop;
+            n = n / 10;
+        }  
+    return result;
+    }
+    
+    bool isHappy(int n) {
+        int res = cal(n);
+        unordered_set<int> aux_set;
+        while(res != 1)
+        {
+            if(aux_set.find(res) == aux_set.end())
+            {
+                aux_set.insert(res); 
+            }
+            else
+                return false;
+            res = cal(res);
+        }
+        return true;
+    }
+};
+
+
+
+
+
+
+# Java：
+class Solution {
+    
+    
+    public boolean isHappy(int n) {
+        Set<Integer> existed = new HashSet<>(10);
+        while (n != 1) {
+            if (existed.contains(n)) return false;
+            existed.add(n);
+            n = getSquareSum(n);
+        }
+        return true;
+    }
+    
+    private int getSquareSum(int n) {
+        int sum = 0;
+        while (n != 0) {
+            sum += (n % 10) * (n % 10);
+            n /= 10;
+        }
+        return sum;
+    }
+}
+
+
+
+
+
+
