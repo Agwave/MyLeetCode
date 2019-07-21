@@ -1,0 +1,153 @@
+给定一个整数数组 nums 和一个目标值 target，请你在该数组中找出和为目标值的那 两个 整数，并返回他们的数组下标。
+
+你可以假设每种输入只会对应一个答案。但是，你不能重复利用这个数组中同样的元素。
+
+示例:
+
+给定 nums = [2, 7, 11, 15], target = 9
+
+因为 nums[0] + nums[1] = 2 + 7 = 9
+所以返回 [0, 1]
+
+
+
+
+
+
+
+#######################自答###########################
+# python3：10%
+class Solution:
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+        else_nums = {}
+        for i, num in enumerate(nums):
+            else_nums[i] = target - num
+        for i, num in enumerate(nums):
+            for key in else_nums:
+                if num == else_nums[key] and i != key:
+                    return [i, key]
+
+
+
+
+
+
+
+
+# C++：86%
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        unordered_map<int, int> hashmap;
+        vector<int> ret;
+        for (int i = 0; i < nums.size(); ++i) {
+            if (hashmap.count(target-nums[i]) > 0) {
+                ret.push_back(hashmap[target-nums[i]]);
+                ret.push_back(i);
+            } else {
+                hashmap[nums[i]] = i;
+            }
+        }
+        return ret;
+    }
+};
+
+
+
+
+
+
+
+
+# Java：99%
+class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        Map<Integer, Integer> hashmap = new HashMap<>();
+        int[] ret = new int[2];
+        for (int i = 0; i < nums.length; ++i) {
+            if (hashmap.containsKey(target-nums[i])) {
+                ret[0] = hashmap.get(target-nums[i]);
+                ret[1] = i;
+                break;
+            } else {
+                hashmap.put(nums[i], i);
+            }
+        }
+        return ret;
+    }
+}
+
+
+
+
+
+
+
+
+##########################参考解答###########################3
+# python3：
+class Solution:
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+        seen = {}
+        for i in range(len(nums)):
+            if target-nums[i] in seen:
+                seen[target-nums[i]]
+                return [i,seen[target-nums[i]]]
+            else:
+                seen[nums[i]] = i
+
+
+
+
+
+
+
+# C++：
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        if(nums.empty() || nums.size()==1)return {};
+        unordered_map<int,int> m;
+        for(int i=0;i<nums.size();++i)
+            m.insert(make_pair(nums[i],i));
+        for(int i=0;i<nums.size();++i)
+            if((m.find(target-nums[i]))!=m.end() && m[target-nums[i]]!=i)
+                return {i,m[target-nums[i]]};
+        return {};
+    }
+};
+
+
+
+
+
+
+
+
+
+# Java：
+class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        HashMap map=new HashMap(nums.length);
+        int[] answer=new int[2];
+        for(int i=0;i<nums.length;i++){
+           int want=target-nums[i];
+                if(map.containsKey(want))
+                {
+                    answer[0]=(Integer)map.get(want);
+                    answer[1]=i;
+                return answer;
+                }
+                else {
+                    map.put(nums[i],i);
+                }
+        }
+        return answer;          
+    } 
+   
+}
+
+
+
+
+
