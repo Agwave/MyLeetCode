@@ -1,0 +1,181 @@
+给定两个字符串 s 和 t，判断它们是否是同构的。
+
+如果 s 中的字符可以被替换得到 t ，那么这两个字符串是同构的。
+
+所有出现的字符都必须用另一个字符替换，同时保留字符的顺序。两个字符不能映射到同一个字符上，但字符可以映射自己本身。
+
+示例 1:
+
+输入: s = "egg", t = "add"
+输出: true
+示例 2:
+
+输入: s = "foo", t = "bar"
+输出: false
+示例 3:
+
+输入: s = "paper", t = "title"
+输出: true
+说明:
+你可以假设 s 和 t 具有相同的长度。
+
+
+
+
+
+
+
+
+######################自答################333
+# python3：75
+class Solution:
+    def isIsomorphic(self, s: str, t: str) -> bool:
+        flag = True
+        s_to_t = {}
+        t_to_s = {}
+        for i, j in zip(s, t):
+            if i not in s_to_t:
+                s_to_t[i] = j
+            elif s_to_t[i] != j:
+                flag = False
+                break
+            if j not in t_to_s:
+                t_to_s[j] = i
+            elif t_to_s[j] != i:
+                flag = False
+                break
+        return flag 
+
+
+
+
+
+
+
+# C++：45%
+class Solution {
+public:
+    bool isIsomorphic(string s, string t) {
+        map<char, char> dict;
+        set<char> t_set;
+        for (int i = 0; i < s.size(); ++i) {
+            if (dict.count(s[i]) <= 0) {
+                dict.insert(make_pair(s[i], t[i]));
+                t_set.insert(t[i]);
+            } else {
+                if (dict[s[i]] != t[i]) {
+                    return false;
+                }
+            }
+        }
+        return dict.size() == t_set.size();
+    }
+};
+
+
+
+
+
+
+# Java：58%
+class Solution {
+    public boolean isIsomorphic(String s, String t) {
+        char[] sc = s.toCharArray();
+		char[] tc = t.toCharArray();
+		int[] ascii = new int[512];		
+		for (int i = sc.length-1; i>=0; i--) {
+			if(ascii[sc[i]]!=ascii[tc[i]+256]) {
+				return false;
+			}
+			ascii[sc[i]] = ascii[tc[i]+256] = i;			
+		}
+		return true;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+######################参考解答################333
+# python3：
+
+class Solution:
+    def isIsomorphic(self, s: str, t: str) -> bool:
+        return len(set(zip(s, t))) == len(set(s)) and len(set(zip(t, s))) == len(set(t))
+        #相同的单词有相同的映射
+
+
+
+
+
+
+# C++：
+class Solution {
+public:
+    bool isIsomorphic(string s, string t) 
+    {
+        
+//         for(int i=0;i<s.size();i++)
+//         {
+//             if(s.find(s[i])!=t.find(t[i]))
+//                 return false;
+//         }
+        
+//         return true;
+        
+        
+        unordered_map<char,char> smap;
+        unordered_map<char,char> tmap;
+        for(int i = 0; s[i] != '\0'; ++ i)
+		{
+            char ss = s[i];
+            char tt = t[i];
+            if(smap.count(ss))
+			{
+                if(smap[ss] != tt)    return false;
+            }
+            else if(tmap.count(tt))
+			{
+                if(tmap[tt] != ss)  return false;
+            }
+            else
+			{
+                smap[ss] = tt;
+                tmap[tt] = ss;
+            }
+        }
+        return true;
+        
+    }
+};
+
+
+
+
+
+# Java：
+
+class Solution {
+    public boolean isIsomorphic(String s, String t) {
+        char[] sc = s.toCharArray();
+		char[] tc = t.toCharArray();
+		int[] ascii = new int[512];		
+		for (int i = sc.length-1; i>=0; i--) {
+			if(ascii[sc[i]]!=ascii[tc[i]+256]) {
+				return false;
+			}
+			ascii[sc[i]] = ascii[tc[i]+256] = i;			
+		}
+		return true;
+    }
+}
+
+
+
+
