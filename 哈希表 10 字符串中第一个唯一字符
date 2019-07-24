@@ -1,0 +1,139 @@
+给定一个字符串，找到它的第一个不重复的字符，并返回它的索引。如果不存在，则返回 -1。
+
+案例:
+
+s = "leetcode"
+返回 0.
+
+s = "loveleetcode",
+返回 2.
+ 
+
+注意事项：您可以假定该字符串只包含小写字母。
+
+
+
+
+
+
+
+
+
+####################自答####################
+# python3：77%
+class Solution:
+    def firstUniqChar(self, s: str) -> int:
+        char_count = {}
+        for char in s:
+            if char not in char_count:
+                char_count[char] = 1
+            else:
+                char_count[char] += 1
+        for key in char_count:
+            if char_count[key] == 1:
+                return s.index(key)
+        return -1
+
+
+
+
+
+
+# C++：58%
+class Solution {
+public:
+    int firstUniqChar(string s) {
+        int ret;
+        unordered_map<char, int> char_count;
+        for (char c : s) char_count[c]++;
+        for (int i = 0; i < s.size(); ++i) {
+            if (char_count[s[i]] == 1) return i;
+        }
+        return -1;
+        
+    }
+};
+
+
+
+
+
+
+# Java：参考他人
+class Solution {
+    public int firstUniqChar(String s) {
+         int index=-1;
+       for(char i='a';i<='z';i++){
+           if(s.indexOf(i)!=-1 && s.indexOf(i)==s.lastIndexOf(i)){
+               index=(index==-1 || index>s.indexOf(i))?s.indexOf(i):index;
+           }
+       }
+       return index;
+    }
+}
+
+
+
+
+
+
+####################参考解答####################
+# python3：
+class Solution:
+    def firstUniqChar(self, s: str) -> int:
+        alp = 'abcdefghijklmnopqrstuvwxyz'
+        s = [s.find(i) for i in alp if s.find(i)==s.rfind(i) and s.find(i) != -1]
+        return min(s) if s else -1
+
+
+
+
+
+# C++：
+static const auto io_sync = []{
+            std::ios::sync_with_stdio(false);
+            std::cin.tie(nullptr);
+            return nullptr;
+        }();
+
+class Solution {
+public:
+    int firstUniqChar(string s) {
+        int one=0;
+        vector<int> m(255,0);
+        for(int i=0;i<s.size();i++){
+            if(m[s[i]]) {
+                m[s[i]]++;
+                if(s[i]==s[one]) {
+                    while(m[s[++one]]>1);
+                }
+            }
+            else m[s[i]]++;
+        }
+        if(one>=s.size()) return -1;
+        return one;
+    }
+};
+
+
+
+
+
+# Java：
+class Solution {
+    public int firstUniqChar(String s) {
+        int index = -1;
+        for (char ch = 'a'; ch <= 'z'; ch++) {
+            int startIndex = s.indexOf(ch);
+            if (startIndex != -1 && startIndex == s.lastIndexOf(ch)) {
+                index = (index == -1 || index > startIndex) ? startIndex : index;
+            }
+        }
+        return index;
+    }
+}
+
+
+
+
+
