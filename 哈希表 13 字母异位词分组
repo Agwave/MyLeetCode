@@ -1,0 +1,130 @@
+给定一个字符串数组，将字母异位词组合在一起。字母异位词指字母相同，但排列不同的字符串。
+
+示例:
+
+输入: ["eat", "tea", "tan", "ate", "nat", "bat"],
+输出:
+[
+  ["ate","eat","tea"],
+  ["nat","tan"],
+  ["bat"]
+]
+说明：
+
+所有输入均为小写字母。
+不考虑答案输出的顺序。
+
+
+
+
+
+
+#########################自答###########################
+# python3：30%
+class Solution:
+    def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
+        sort_dict = {}
+        ret = []
+        
+        for str in strs:
+            sort_strs = self.sortAlpha(str)
+            if sort_strs in sort_dict:
+                sort_dict[sort_strs].append(str)
+            else:
+                sort_dict[sort_strs] = [str]
+        
+        for key in sort_dict:
+            ret.append(sort_dict[key])
+        
+        return ret
+        
+        
+    def sortAlpha(self, strs):
+        strs_list = list(strs)
+        strs_sorted = ''.join(sorted(strs_list))
+        return strs_sorted
+
+
+
+
+
+
+
+
+# C++：84%
+class Solution {
+public:
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+        vector<vector<string>> ret;
+        unordered_map<string, vector<string>> hashmap;
+        string str_sorted;
+        
+        for (string str: strs) {
+            string str_sorted = str;
+            sort(str_sorted.begin(), str_sorted.end());
+            hashmap[str_sorted].push_back(str);
+        }
+        
+        for (auto a: hashmap) {
+            ret.push_back(a.second);
+        }
+        return ret;
+    }
+};
+
+
+
+
+
+
+
+
+
+#########################参考解答#########################
+# python3：
+class Solution:
+    def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
+        result = {}
+        for word in strs:
+            key = ''.join(sorted(word))
+            result.setdefault(key, [])
+            result[key].append(word)
+
+        return list(result.values())
+
+
+
+
+
+
+
+
+# C++：
+class Solution {
+public:
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+        vector<vector<string>> vAns;
+        unordered_map<string, vector<string>> hmAll;
+        for (int i = 0; i < strs.size(); i++) {
+            string s = strs.at(i);
+            sort(s.begin(), s.end());
+            hmAll[s].push_back(strs.at(i));
+        }
+        
+        for (auto iter = hmAll.begin(); iter != hmAll.end(); iter++) 
+        {
+            vAns.push_back(iter->second);
+        }
+        return vAns;
+
+    }
+};
+
+
+
+
+
+
+
+
+
