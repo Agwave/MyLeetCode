@@ -1,0 +1,174 @@
+给定一棵二叉树，返回所有重复的子树。对于同一类的重复子树，你只需要返回其中任意一棵的根结点即可。
+
+两棵树重复是指它们具有相同的结构以及相同的结点值。
+
+示例 1：
+
+        1
+       / \
+      2   3
+     /   / \
+    4   2   4
+       /
+      4
+下面是两个重复的子树：
+
+      2
+     /
+    4
+和
+
+    4
+因此，你需要以列表的形式返回上述重复子树的根结点。
+
+
+
+
+
+
+
+
+
+
+
+#######################自答#########################
+# python3：30%
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def findDuplicateSubtrees(self, root: TreeNode) -> List[TreeNode]:
+        str_to_count = {}
+        ret = []
+        self.helper(root, str_to_count, ret)
+        return ret
+        
+
+    def helper(self, root, str_to_count, ret):
+        if root is None:
+            return '#'
+        s = str(root.val) + ',' + self.helper(root.left, str_to_count, ret) + ',' + self.helper(root.right, str_to_count, ret)
+        if s in str_to_count:
+            if str_to_count[s] == 1:
+                ret.append(root)
+            str_to_count[s] += 1
+        else:
+            str_to_count[s] = 1
+        return s
+
+
+
+
+
+
+
+# C++：68%
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<TreeNode*> findDuplicateSubtrees(TreeNode* root) {
+        vector<TreeNode*> ret;
+        unordered_map<string, int> str_to_count;
+        helper(root, ret, str_to_count);
+        return ret;
+    }
+
+private:
+    string helper(TreeNode* root, vector<TreeNode*> &ret, unordered_map<string, int> &str_to_count) {
+        if (root == NULL) return "#";
+        string s = to_string(root->val) + " " + helper(root->left, ret, str_to_count) + " " + helper(root->right, ret, str_to_count);
+        if (str_to_count[s] == 1) ret.push_back(root);
+        str_to_count[s] += 1;
+        return s;
+    } 
+};
+
+
+
+
+
+
+
+
+#######################参考解答#######################
+# python3:
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def findDuplicateSubtrees(self, root: TreeNode) -> List[TreeNode]:
+        ans=[]
+        d={}
+        def f(r):
+            if not r:
+                return 'N'
+            s=str(r.val)+' '+f(r.left)+' '+f(r.right)
+            if s not in d:
+                d[s]=True
+            elif d[s]==True:
+                ans.append(r)
+                d[s]=False
+            return s
+        f(root)
+        return ans
+
+
+
+
+
+
+
+
+# C++:
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<TreeNode*> findDuplicateSubtrees(TreeNode* root) {
+        vector<TreeNode*>res;
+        unordered_map<string,int> m;
+        helper(root,m,res);
+        return res;
+    }
+    string helper(TreeNode*root,unordered_map<string,int>&m,vector<TreeNode*>&res)
+    {
+        if(!root)
+            return "#";
+        string str=to_string(root->val)+","+helper(root->left,m,res)+","+helper(root->right,m,res);
+        if(m[str]==1)
+            res.push_back(root);
+        ++m[str];
+        return str;
+    }
+};
+
+
+
+
+
+
+
+
