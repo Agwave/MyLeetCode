@@ -1,0 +1,142 @@
+给定四个包含整数的数组列表 A , B , C , D ,计算有多少个元组 (i, j, k, l) ，使得 A[i] + B[j] + C[k] + D[l] = 0。
+
+为了使问题简单化，所有的 A, B, C, D 具有相同的长度 N，且 0 ≤ N ≤ 500 。所有整数的范围在 -228 到 228 - 1 之间，最终结果不会超过 231 - 1 。
+
+例如:
+
+输入:
+A = [ 1, 2]
+B = [-2,-1]
+C = [-1, 2]
+D = [ 0, 2]
+
+输出:
+2
+
+解释:
+两个元组如下:
+1. (0, 0, 0, 1) -> A[0] + B[0] + C[0] + D[1] = 1 + (-2) + (-1) + 2 = 0
+2. (1, 1, 0, 0) -> A[1] + B[1] + C[0] + D[0] = 2 + (-1) + (-1) + 0 = 0
+
+
+
+
+
+
+
+
+
+####################自答##################
+# python3:80%
+class Solution:
+    def fourSumCount(self, A: List[int], B: List[int], C: List[int], D: List[int]) -> int:
+        """
+        使用hashmap，key是两个数组和可能的结果，value是每个结果的个数
+        这样获得两个hashmap，两个hashmap的key再相加看结果
+        """
+        ret = 0
+        a_b_map = dict()
+        
+        for a in A:
+            for b in B:
+                if a+b not in a_b_map:
+                    a_b_map[a+b] = 1
+                else:
+                    a_b_map[a+b] += 1
+        
+        for c in C:
+            for d in D:
+                if -c-d in a_b_map:
+                    ret += a_b_map[-c-d]
+        
+        return ret
+
+
+
+
+
+
+
+# C++:
+class Solution {
+public:
+    int fourSumCount(vector<int>& A, vector<int>& B, vector<int>& C, vector<int>& D) {
+        /**
+         * A、B两数组合成哈希表。key是可能的和，value是这种可能的个数
+         * 遍历C、D，C中取c，D中取d，若-c-d在哈希表中，ret加value
+         */
+        int ret = 0;
+        unordered_map<int, int> a_b_map;
+        for (int a: A) {
+            for (int b: B) {
+                a_b_map[a+b] += 1;
+            }
+        }
+        
+        for (int c: C) {
+            for (int d: D) {
+                if (a_b_map.count(-c-d) > 0) 
+                    ret += a_b_map[-c-d];
+            }
+        }
+        
+        return ret;
+    }
+};
+
+
+
+
+
+
+####################参考解答####################
+# python3：
+class Solution:
+    def fourSumCount(self, A: List[int], B: List[int], C: List[int], D: List[int]) -> int:
+        from collections import Counter
+        AA, BB, CC, DD = map(Counter, (A, B, C, D))
+        dic, ans = {}, 0
+        for a_i, a_v in AA.items():
+            for b_i, b_v in BB.items():
+                dic[a_i + b_i] = dic.get(a_i + b_i, 0) + a_v * b_v
+        for c_i, c_v in CC.items():
+            for d_i, d_v in DD.items():
+                if -(c_i + d_i) in dic:
+                    ans += dic.get(-(c_i + d_i)) * c_v * d_v
+        return ans
+
+
+
+
+
+
+# C++：
+class Solution {
+public:
+    int fourSumCount(vector<int>& A, vector<int>& B, vector<int>& C, vector<int>& D) {
+        int c = 0;
+        unordered_map<int, int> m;
+        for(int i = 0; i < A.size(); i++){
+            for(int j = 0; j < B.size(); j++){
+               m[A[i] + B[j]]++;
+            }
+        }
+        
+        
+        for(int i = 0; i < C.size(); i++){
+            for(int j = 0; j < D.size(); j++){
+               if(m.find(-(C[i] + D[j])) != m.end()){
+                   c += m[-(C[i] + D[j])];
+               }
+            }
+        }
+        
+        return c;
+    }
+};
+
+
+
+
+
+
