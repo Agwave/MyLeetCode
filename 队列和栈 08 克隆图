@@ -1,0 +1,86 @@
+给定无向连通图中一个节点的引用，返回该图的深拷贝（克隆）。图中的每个节点都包含它的值 val（Int） 和其邻居的列表（list[Node]）。
+
+示例：
+
+
+
+输入：
+{"$id":"1","neighbors":[{"$id":"2","neighbors":[{"$ref":"1"},{"$id":"3","neighbors":[{"$ref":"2"},{"$id":"4","neighbors":[{"$ref":"3"},{"$ref":"1"}],"val":4}],"val":3}],"val":2},{"$ref":"4"}],"val":1}
+
+解释：
+节点 1 的值是 1，它有两个邻居：节点 2 和 4 。
+节点 2 的值是 2，它有两个邻居：节点 1 和 3 。
+节点 3 的值是 3，它有两个邻居：节点 2 和 4 。
+节点 4 的值是 4，它有两个邻居：节点 1 和 3 。
+
+
+
+
+
+
+
+
+
+
+######################自答######################
+# python3：95%
+"""
+# Definition for a Node.
+class Node:
+    def __init__(self, val, neighbors):
+        self.val = val
+        self.neighbors = neighbors
+"""
+class Solution:
+    def cloneGraph(self, node: 'Node') -> 'Node':
+        visited = {}
+        
+        def search(node):
+            if node is None:
+                return 
+            if node in visited:
+                return visited[node]
+            clone = Node(node.val, [])
+            visited[node] = clone
+            for neighbor in node.neighbors:
+                clone.neighbors.append(search(neighbor))
+            return clone
+        
+        return search(node)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##################参考解答##########################
+# python3:
+"""
+# Definition for a Node.
+class Node:
+    def __init__(self, val, neighbors):
+        self.val = val
+        self.neighbors = neighbors
+"""
+class Solution:
+    def cloneGraph(self, node: 'Node') -> 'Node':
+        dic = {node: Node(node.val, [])}
+        queue = [node]
+        while queue:
+            cur = queue.pop(0)
+            for n in cur.neighbors:
+                if n not in dic:
+                    dic[n] = Node(n.val, [])
+                    queue.append(n)
+        for k, v in dic.items():
+            for n in k.neighbors:
+                v.neighbors.append(dic[n])
+        return dic[node]
