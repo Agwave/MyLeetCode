@@ -1,0 +1,257 @@
+使用栈实现队列的下列操作：
+
+push(x) -- 将一个元素放入队列的尾部。
+pop() -- 从队列首部移除元素。
+peek() -- 返回队列首部的元素。
+empty() -- 返回队列是否为空。
+示例:
+
+MyQueue queue = new MyQueue();
+
+queue.push(1);
+queue.push(2);  
+queue.peek();  // 返回 1
+queue.pop();   // 返回 1
+queue.empty(); // 返回 false
+说明:
+
+你只能使用标准的栈操作 -- 也就是只有 push to top, peek/pop from top, size, 和 is empty 操作是合法的。
+你所使用的语言也许不支持栈。你可以使用 list 或者 deque（双端队列）来模拟一个栈，只要是标准的栈操作即可。
+假设所有操作都是有效的 （例如，一个空的队列不会调用 pop 或者 peek 操作）。
+
+
+
+
+
+
+
+
+
+
+
+####################自答######################
+# python3：22%
+class MyQueue:
+
+    def __init__(self):
+        """
+        Initialize your data structure here.
+        """
+        self.queue1 = []
+        self.queue2 = []
+        
+    def push(self, x: int) -> None:
+        """
+        Push element x to the back of queue.
+        """
+        self.queue1.append(x)
+
+    def pop(self) -> int:
+        """
+        Removes the element from in front of queue and returns that element.
+        """
+        if len(self.queue2) == 0:
+            while len(self.queue1) != 0:
+                self.queue2.append(self.queue1.pop())
+        return self.queue2.pop()
+        
+    def peek(self) -> int:
+        """
+        Get the front element.
+        """
+        if len(self.queue2) == 0:
+            while len(self.queue1) != 0:
+                self.queue2.append(self.queue1.pop())
+
+        front = self.queue2.pop()
+        self.queue2.append(front)
+        return front
+        
+
+    def empty(self) -> bool:
+        """
+        Returns whether the queue is empty.
+        """
+        return len(self.queue1) == 0 and len(self.queue2) == 0
+        
+
+
+# Your MyQueue object will be instantiated and called as such:
+# obj = MyQueue()
+# obj.push(x)
+# param_2 = obj.pop()
+# param_3 = obj.peek()
+# param_4 = obj.empty()
+
+
+
+
+
+
+
+# C++：78%
+class MyQueue {
+public:
+    stack<int> stack1;
+    stack<int> stack2;
+    int front;
+    /** Initialize your data structure here. */
+    MyQueue() {
+        
+    }
+    
+    /** Push element x to the back of queue. */
+    void push(int x) {
+        stack1.push(x);
+    }
+    
+    /** Removes the element from in front of queue and returns that element. */
+    int pop() {
+        if (stack2.empty()) {
+            while (!stack1.empty()) {
+                stack2.push(stack1.top());
+                stack1.pop();
+            }
+        }
+        front = stack2.top();
+        stack2.pop();
+        return front;
+    }
+    
+    /** Get the front element. */
+    int peek() {
+        if (stack2.empty()) {
+            while (!stack1.empty()) {
+                stack2.push(stack1.top());
+                stack1.pop();
+            }
+        }
+        return stack2.top();
+    }
+    
+    /** Returns whether the queue is empty. */
+    bool empty() {
+        return (stack1.empty() and stack2.empty());
+    }
+};
+
+/**
+ * Your MyQueue object will be instantiated and called as such:
+ * MyQueue* obj = new MyQueue();
+ * obj->push(x);
+ * int param_2 = obj->pop();
+ * int param_3 = obj->peek();
+ * bool param_4 = obj->empty();
+ */
+
+
+
+
+
+
+##################参考解答#####################
+# python3：
+class MyQueue:
+
+    def __init__(self):
+        """
+        Initialize your data structure here.
+        """
+        self.stackin = []
+        self.stackout = []
+        
+
+    def push(self, x: int) -> None:
+        """
+        Push element x to the back of queue.
+        """
+        self.stackin.append(x)
+
+    def pop(self) -> int:
+        """
+        Removes the element from in front of queue and returns that element.
+        """
+        if not self.stackout:
+            while self.stackin:
+                a =self.stackin.pop()
+                self.stackout.append(a)
+        return self.stackout.pop() #pop means remove the last element == the first in the queue
+
+    def peek(self) -> int:
+        """
+        Get the front element.
+        """
+        if not self.stackout:
+            while self.stackin:
+                a =self.stackin.pop()
+                self.stackout.append(a)
+        return self.stackout[-1]
+        
+
+    def empty(self) -> bool:
+        """
+        Returns whether the queue is empty.
+        """
+        if not self.stackin and not self.stackout:
+            return True
+        else:
+            return False
+
+
+
+
+
+# C++：
+class MyQueue {
+public:
+    /** Initialize your data structure here. */
+    MyQueue() {
+        
+    }
+    
+    /** Push element x to the back of queue. */
+    void push(int x) {
+        stackIn.push(x);
+    }
+    
+    /** Removes the element from in front of queue and returns that element. */
+    int pop() {
+        if(stackOut.empty()){
+            while(!stackIn.empty()){
+                stackOut.push(stackIn.top());
+                stackIn.pop();
+            }
+        }
+       int val = stackOut.top();
+        stackOut.pop();
+        return val;
+    }
+    
+    /** Get the front element. */
+    int peek() {
+        if(stackOut.empty()){
+            while(!stackIn.empty()){
+                stackOut.push(stackIn.top());
+                stackIn.pop();
+            }
+        }
+        return stackOut.top();
+    }
+    
+    /** Returns whether the queue is empty. */
+    bool empty() {
+        if(stackIn.size()+stackOut.size() == 0)
+            return true;
+        else
+            return false;
+    }
+
+private:
+    stack<int> stackIn;
+    stack<int> stackOut;
+};
+
+
+
+
+
