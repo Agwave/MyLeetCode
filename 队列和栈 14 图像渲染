@@ -1,0 +1,182 @@
+有一幅以二维整数数组表示的图画，每一个整数表示该图画的像素值大小，数值在 0 到 65535 之间。
+
+给你一个坐标 (sr, sc) 表示图像渲染开始的像素值（行 ，列）和一个新的颜色值 newColor，让你重新上色这幅图像。
+
+为了完成上色工作，从初始坐标开始，记录初始坐标的上下左右四个方向上像素值与初始坐标相同的相连像素点，接着再记录这四个方向上符合条件的像素点与他们对应四个方向上像素值与初始坐标相同的相连像素点，……，重复该过程。将所有有记录的像素点的颜色值改为新的颜色值。
+
+最后返回经过上色渲染后的图像。
+
+示例 1:
+
+输入: 
+image = [[1,1,1],[1,1,0],[1,0,1]]
+sr = 1, sc = 1, newColor = 2
+输出: [[2,2,2],[2,2,0],[2,0,1]]
+解析: 
+在图像的正中间，(坐标(sr,sc)=(1,1)),
+在路径上所有符合条件的像素点的颜色都被更改成2。
+注意，右下角的像素没有更改为2，
+因为它不是在上下左右四个方向上与初始点相连的像素点。
+注意:
+
+image 和 image[0] 的长度在范围 [1, 50] 内。
+给出的初始点将满足 0 <= sr < image.length 和 0 <= sc < image[0].length。
+image[i][j] 和 newColor 表示的颜色值在范围 [0, 65535]内。
+
+
+
+
+
+
+
+#########################自答######################
+# C++：54%
+class Solution {
+public:
+    vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int newColor) {
+        stack<int> stk_sr;
+        stack<int> stk_sc;
+        int color = image[sr][sc];
+        int cur_sr, cur_sc, n, m;
+        
+        m = image.size();
+        n = image[0].size();
+        stk_sr.push(sr);
+        stk_sc.push(sc);
+                
+        if (newColor == color) return image;
+        
+        while (!stk_sr.empty()) {
+            
+            cur_sr = stk_sr.top();
+            cur_sc = stk_sc.top();
+            stk_sr.pop();
+            stk_sc.pop();
+            
+            image[cur_sr][cur_sc] = newColor;
+            if (cur_sc > 0 && image[cur_sr][cur_sc-1] == color) {
+                
+                stk_sr.push(cur_sr);
+                stk_sc.push(cur_sc-1);
+            }
+            if (cur_sc < n-1 && image[cur_sr][cur_sc+1] == color) {
+                stk_sr.push(cur_sr);
+                stk_sc.push(cur_sc+1);
+            } 
+            if (cur_sr > 0 && image[cur_sr-1][cur_sc] == color) {
+                stk_sr.push(cur_sr-1);
+                stk_sc.push(cur_sc);
+            }
+            if (cur_sr < m-1 && image[cur_sr+1][cur_sc] == color) {
+                stk_sr.push(cur_sr+1);
+                stk_sc.push(cur_sc);
+            }
+        }
+        return image;
+    }
+};
+
+
+
+
+
+
+
+
+
+# python3：6%
+class Solution:
+    def floodFill(self, image: List[List[int]], sr: int, sc: int, newColor: int) -> List[List[int]]:
+        stack = []
+        arounds = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+        
+        color = image[sr][sc]
+        m = len(image)
+        n = len(image[0])
+        
+        if color == newColor:
+            return image
+        
+        stack.append((sr, sc))
+        
+        while stack:
+            cur = stack.pop()
+            image[cur[0]][cur[1]] = newColor
+            for around in arounds:
+                x = cur[0] + around[0]
+                y = cur[1] + around[1]
+                if x >= 0 and x < m and y >= 0 and y < n and image[x][y] == color:
+                    stack.append((x, y))
+        
+        return image
+
+
+
+
+
+
+
+########################参考解答########################
+# C++：
+class Solution {
+public:
+    vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int newColor) {
+        queue <pair<int,int>> olds;
+        int old = image[sr][sc];
+        if(newColor == old) return image; //剪枝，若新颜色和旧色一样，直接返回原来的图像
+        olds.push({sr,sc});
+        //BFS由此开始--------------
+        while(!olds.empty()) 
+        {
+            pair<int,int> temp = olds.front();
+            olds.pop();
+            image[temp.first][temp.second] = newColor; //因为放入队列中的像素都是旧色像素，直接变成新色
+            vector<pair<int,int>> around = {{0,1},{0,-1},{-1,0},{1,0}}; //该像素四周的像素
+            for(int i = 0; i < 4; ++i) 
+            {
+                int y = temp.first + around[i].first;
+                int x = temp.second + around[i].second;
+                if(0 <= y && y < image.size() && 0 <= x && x < image[0].size() && image[y][x] == old) //若在图像内，且是旧色，则压入olds队列
+                    olds.push({y,x});
+            }
+        }
+        return image;
+    }
+};
+
+
+
+
+
+
+
+# python3：
+class Solution:
+    def floodFill(self, image: List[List[int]], sr: int, sc: int, newColor: int) -> List[List[int]]:
+        rows, cols = len(image), len(image[0])
+
+        startColor = image[sr][sc]
+        if startColor == newColor:
+            return image
+
+        stack = [(sr, sc)]
+        while stack:
+            r, c = stack.pop()
+
+            if r < 0 or r >= rows or c < 0 or c >= cols:
+                continue
+            if image[r][c] != startColor:
+                continue
+
+            image[r][c] = newColor
+            for dr, dc in [(1, 0), (0, 1), (-1, 0), (0, -1)]:
+                stack.append((r + dr, c + dc))
+        return image        
+
+
+
+
+
+
+
+
