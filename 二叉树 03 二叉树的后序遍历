@@ -1,0 +1,142 @@
+给定一个二叉树，返回它的 后序 遍历。
+
+示例:
+
+输入: [1,null,2,3]  
+   1
+    \
+     2
+    /
+   3 
+
+输出: [3,2,1]
+进阶: 递归算法很简单，你可以通过迭代算法完成吗？
+
+
+
+来源：力扣（LeetCode）
+链接：https://leetcode-cn.com/problems/binary-tree-postorder-traversal
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+
+
+
+
+
+
+
+####################自答#####################
+# python3：
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+
+class Solution:
+    def postorderTraversal(self, root: TreeNode) -> List[int]:
+        stack = []
+        ret = []
+        
+        if root is None:
+            return []
+        
+        stack.append(root)
+        while stack:
+            node = stack.pop()
+            ret.append(node.val)
+            if node.left is not None:
+                stack.append(node.left)
+            if node.right is not None:
+                stack.append(node.right)
+                
+        return ret[::-1]
+
+
+
+
+
+
+
+# C++：
+class Solution {
+public:
+    vector<int> postorderTraversal(TreeNode* root) {
+        if (root == nullptr) return ret;
+        cout << root->val << endl;
+        postorderTraversal(root->left);
+        postorderTraversal(root->right);
+        ret.push_back(root->val);
+        return ret;
+    }
+
+private:
+    vector<int> ret;
+};
+
+
+
+
+
+
+
+
+
+
+###################参考解答###################
+# python3:
+class Solution:
+    def postorderTraversal(self, root: TreeNode) -> List[int]:
+        res = []
+        def helper(root):
+            if not root:
+                return 
+            helper(root.left)
+            helper(root.right)
+            res.append(root.val)
+        helper(root)
+        return res 
+        
+        
+        
+        
+# C++:
+class Solution {
+public:
+    vector<int>ans;
+    vector<int> postorderTraversal(TreeNode* root) {
+        /*
+        if(root==NULL) return ans;
+        if(root->left!=NULL) 
+            postorderTraversal(root->left);
+        if(root->right!=NULL)
+            postorderTraversal(root->right);
+        ans.push_back(root->val);
+        return ans;
+        */
+        stack<TreeNode*>s1,s2;
+        vector<int>ans;
+        if(root==NULL) return ans;
+        s1.push(root);
+        while(!s1.empty())
+        {
+            TreeNode* tmp=s1.top();
+            s1.pop();
+            s2.push(tmp);
+            if(tmp->left!=NULL) s1.push(tmp->left);
+            if(tmp->right!=NULL) s1.push(tmp->right);
+            
+        }
+        while(!s2.empty())
+        {
+            TreeNode* tmp=s2.top();
+            s2.pop();
+            ans.push_back(tmp->val);
+        }
+        return ans;
+    }
+};
+
+
+        
