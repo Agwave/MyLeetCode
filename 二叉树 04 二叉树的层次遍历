@@ -1,0 +1,118 @@
+给定一个二叉树，返回其按层次遍历的节点值。 （即逐层地，从左到右访问所有节点）。
+
+例如:
+给定二叉树: [3,9,20,null,null,15,7],
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+返回其层次遍历结果：
+
+[
+  [3],
+  [9,20],
+  [15,7]
+]
+
+
+
+
+
+#####################自答######################
+# C++：84%
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        vector<vector<int>> ret;
+        vector<int> floor;
+        TreeNode* temp;
+        queue<TreeNode*> q;
+        
+        if (root == nullptr) return ret;
+        q.push(root);
+        
+        while (!q.empty()) {
+            int length = q.size();
+            for (int i = 0; i < length; ++i) {
+                temp = q.front();
+                q.pop();
+                floor.push_back(temp->val);
+                if (temp->left != nullptr) q.push(temp->left);
+                if (temp->right != nullptr) q.push(temp->right);
+            }
+            ret.push_back(floor);
+            floor.clear();
+        }
+        
+        return ret;
+    }
+};
+
+
+
+
+
+
+
+# python3：
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def levelOrder(self, root: TreeNode) -> List[List[int]]:
+        ret = []
+        floor = []
+        queue = []
+        
+        if root is None:
+            return ret
+        queue.append(root)
+        
+        while queue:
+            length = len(queue)
+            for _ in range(length):
+                temp = queue.pop()
+                floor.append(temp.val)
+                if temp.left is not None:
+                    queue.insert(0, temp.left)
+                if temp.right is not None:
+                    queue.insert(0, temp.right)
+            ret.append(floor)
+            floor = []
+            
+        return ret
+
+
+
+
+
+
+###################参考解答#####################
+# C++：
+
+
+
+
+
+
+# python3：
+
+
+
+
+
