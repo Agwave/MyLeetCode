@@ -1,0 +1,118 @@
+给定一个二叉树，找出其最大深度。
+
+二叉树的深度为根节点到最远叶子节点的最长路径上的节点数。
+
+说明: 叶子节点是指没有子节点的节点。
+
+示例：
+给定二叉树 [3,9,20,null,null,15,7]，
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+返回它的最大深度 3 。
+
+
+
+
+
+
+######################自答##################
+# C++：
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int maxDepth(TreeNode* root) {
+        int l, r;
+        if (root == nullptr) {
+            return 0;
+        }
+        l = maxDepth(root->left);
+        r = maxDepth(root->right);
+        return max(l, r) + 1;
+    }
+};
+
+
+
+
+
+
+
+# python3：85%
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def maxDepth(self, root: TreeNode) -> int:
+        queue = [root]
+        length = 0
+        ret = 0
+        
+        if root is None:
+            return ret
+        
+        while queue:
+            ret += 1
+            length = len(queue)
+            for _ in range(length):
+                node = queue.pop()
+                if node.left:
+                    queue.insert(0, node.left)
+                if node.right:
+                    queue.insert(0, node.right)
+                    
+        return ret
+
+
+
+
+
+
+
+#####################参考解答#######################
+# C++：
+
+
+
+
+
+
+
+# python3：
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def maxDepth(self, root: TreeNode) -> int:
+        if root is None:
+            return 0
+        else:
+            left_maxDepth = self.maxDepth(root.left)
+            right_maxDepth = self.maxDepth(root.right)
+        return max(left_maxDepth , right_maxDepth) + 1
+        
+        
+        
+        
+        
+        
