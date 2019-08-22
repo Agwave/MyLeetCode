@@ -1,0 +1,153 @@
+给定一个二叉树，检查它是否是镜像对称的。
+
+例如，二叉树 [1,2,2,3,4,4,3] 是对称的。
+
+    1
+   / \
+  2   2
+ / \ / \
+3  4 4  3
+但是下面这个 [1,2,2,null,3,null,3] 则不是镜像对称的:
+
+    1
+   / \
+  2   2
+   \   \
+   3    3
+说明:
+
+如果你可以运用递归和迭代两种方法解决这个问题，会很加分。
+
+来源：力扣（LeetCode）
+链接：https://leetcode-cn.com/problems/symmetric-tree
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+
+
+
+
+
+
+####################自答#####################
+# C++：95%
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool isSymmetric(TreeNode* root) {
+        return isMirror(root, root);
+    }
+
+private:
+    bool isMirror(TreeNode* left, TreeNode* right) {
+        if (left == nullptr && right == nullptr) return true;
+        else if (left == nullptr || right == nullptr) return false;
+        return (left->val == right->val) && 
+            (isMirror(left->left, right->right)) &&
+            (isMirror(left->right, right->left));
+    }   
+};
+
+
+
+
+
+
+
+
+# python3：20%
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def isSymmetric(self, root: TreeNode) -> bool:
+        queue = [root, root]
+        while queue:
+            t1 = queue.pop()
+            t2 = queue.pop()
+            
+            if t1 is None and t2 is None:
+                continue
+            elif t1 is None or t2 is None:
+                return False
+            
+            if t1.val != t2.val:
+                return False
+            else:
+                queue.insert(0, t1.left)
+                queue.insert(0, t2.right)
+                queue.insert(0, t1.right)
+                queue.insert(0, t2.left)
+        return True
+
+
+
+
+
+
+
+
+###################参考解答####################
+# C++：
+class Solution {
+public:
+    bool isSymmetric(TreeNode* root) {
+        if (!root) return true;
+        queue<TreeNode*> q1, q2;
+        TreeNode *l, *r;
+        q1.push(root->left);
+        q2.push(root->right);
+        while (!q1.empty() && !q2.empty()) {
+            l = q1.front();
+            q1.pop();
+            r = q2.front();
+            q2.pop();
+            if (!l && !r) continue;
+            else if (!l || !r) return false;
+            else if (l->val != r->val) return false;
+            q1.push(l->left);
+            q1.push(l->right);
+            q2.push(r->right);
+            q2.push(r->left);
+        }
+        return true;
+    }
+};
+
+
+
+
+
+
+# python3：
+class Solution:
+    def isSymmetric(self, root: TreeNode) -> bool:
+        if not root:
+            return True
+        deq = [(root.left,root.right)]
+        while deq:
+            p,q = deq.pop(0)
+            if not p and not q:
+               continue
+            if not p or not q:
+               return False
+            if p.val!=q.val:
+               return False
+            deq.append((p.left,q.right)) 
+            deq.append((p.right,q.left))   
+        return True
+
+
+
+
+
