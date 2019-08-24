@@ -1,0 +1,71 @@
+根据一棵树的中序遍历与后序遍历构造二叉树。
+
+注意:
+你可以假设树中没有重复的元素。
+
+例如，给出
+
+中序遍历 inorder = [9,3,15,20,7]
+后序遍历 postorder = [9,15,7,20,3]
+返回如下的二叉树：
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+
+
+
+
+
+
+#####################自答################
+# python3：参考
+class Solution:
+
+    def __init__(self):
+        self.inorder = None
+        self.postorder = None
+
+    def buildTree(self, inorder: List[int], postorder: List[int]) -> TreeNode:
+        assert len(inorder) == len(postorder)
+        size = len(inorder)
+
+        self.inorder = inorder
+        self.postorder = postorder
+        return self.__dfs(0, size - 1, 0, size - 1)
+
+    def __dfs(self, in_l, in_r, post_l, post_r):
+        if in_l > in_r or post_l > post_r:
+            return None
+
+        val = self.postorder[post_r]
+        # 后序遍历的最后一个结点就是根结点
+        root = TreeNode(val)
+        # 在中序遍历中找到根结点的索引，得到左右子树的一个划分
+        pos = self.inorder.index(val)
+
+        # 注意：第 4 个参数是计算出来的，依据：两边区间长度相等
+        root.left = self.__dfs(in_l, pos - 1, post_l, pos - 1 - in_l + post_l)
+        # 注意：第 3 个参数是计算出来的，依据：两边区间长度相等
+        root.right = self.__dfs(pos + 1, in_r, post_r - in_r + pos, post_r - 1)
+        return root
+        
+
+
+
+
+
+##################参考解答################3
+# python3：
+class Solution:
+    def buildTree(self, inorder: List[int], postorder: List[int]) -> TreeNode:
+        d={j:i for i,j in enumerate(inorder)}
+        def f(i,j):
+            if i<=j:
+                t=TreeNode(postorder.pop())
+                t.right=f(d[t.val]+1,j)
+                t.left=f(i,d[t.val]-1)
+                return t
+        return f(0,len(inorder)-1)
