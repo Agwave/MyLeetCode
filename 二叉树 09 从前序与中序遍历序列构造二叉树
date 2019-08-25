@@ -1,0 +1,108 @@
+根据一棵树的前序遍历与中序遍历构造二叉树。
+
+注意:
+你可以假设树中没有重复的元素。
+
+例如，给出
+
+前序遍历 preorder = [3,9,20,15,7]
+中序遍历 inorder = [9,3,15,20,7]
+返回如下的二叉树：
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+   
+   
+   
+
+
+
+
+
+#######################自答###################
+# C++：
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+        for (int i = 0; i < preorder.size(); ++i) {
+            q.push(preorder[i]);
+        }
+
+        for (int i = 0; i < inorder.size(); ++i) {
+            m[inorder[i]] = i;
+        }
+        
+        return helper(0, preorder.size()-1);
+    }
+
+private:
+    queue<int> q;
+    unordered_map<int, int> m;
+
+    TreeNode* helper(int i, int j) {
+        if (i <= j) {
+            TreeNode* t = new TreeNode(q.front());
+            cout << q.front() << endl;
+            q.pop();
+            t->left = helper(i, m[t->val]-1);
+            t->right = helper(m[t->val]+1, j);
+            return t;
+        }
+        return nullptr;
+    }
+};
+
+
+
+
+
+
+
+
+########################参考解答########################
+# C++：
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public://Construct binary tree 用hashmap
+    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+        if(preorder.empty())return NULL;
+        unordered_map<int,int> mymap;
+        for(int i=0;i<preorder.size();i++){
+            mymap[inorder[i]]=i;
+        }
+        return constructbt(preorder,0,preorder.size(),inorder,0,inorder.size(),mymap);
+    }
+    TreeNode* constructbt(vector<int> &preorder,int p1, int p2, vector<int> &inorder, int i1, int i2,unordered_map<int,int> &mymap){
+        if(p1>=p2||i1>=i2) return NULL;
+        int pos=mymap[preorder[p1]]-i1;
+        TreeNode* pCur = new TreeNode(preorder[p1]);
+        pCur->left=constructbt(preorder, p1+1, p1+pos+1, inorder, i1, i1+pos, mymap);
+        pCur->right=constructbt(preorder, p1+pos+1, p2, inorder, i1+pos+1, i2, mymap);
+        return pCur;
+    }
+};
+
+
+
+
+
