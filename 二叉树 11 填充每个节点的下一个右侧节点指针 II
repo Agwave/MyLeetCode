@@ -1,0 +1,111 @@
+给定一个二叉树
+
+struct Node {
+  int val;
+  Node *left;
+  Node *right;
+  Node *next;
+}
+填充它的每个 next 指针，让这个指针指向其下一个右侧节点。如果找不到下一个右侧节点，则将 next 指针设置为 NULL。
+
+初始状态下，所有 next 指针都被设置为 NULL。
+
+ 
+
+示例：
+
+
+
+输入：{"$id":"1","left":{"$id":"2","left":{"$id":"3","left":null,"next":null,"right":null,"val":4},"next":null,"right":{"$id":"4","left":null,"next":null,"right":null,"val":5},"val":2},"next":null,"right":{"$id":"5","left":null,"next":null,"right":{"$id":"6","left":null,"next":null,"right":null,"val":7},"val":3},"val":1}
+
+输出：{"$id":"1","left":{"$id":"2","left":{"$id":"3","left":null,"next":{"$id":"4","left":null,"next":{"$id":"5","left":null,"next":null,"right":null,"val":7},"right":null,"val":5},"right":null,"val":4},"next":{"$id":"6","left":null,"next":null,"right":{"$ref":"5"},"val":3},"right":{"$ref":"4"},"val":2},"next":null,"right":{"$ref":"6"},"val":1}
+
+解释：给定二叉树如图 A 所示，你的函数应该填充它的每个 next 指针，以指向其下一个右侧节点，如图 B 所示。
+ 
+
+提示：
+
+你只能使用常量级额外空间。
+使用递归解题也符合要求，本题中递归程序占用的栈空间不算做额外的空间复杂度。
+
+
+
+
+
+
+##################参考解答###################
+# C++：
+class Solution {
+public:
+    Node* findnext(Node* root)
+    {
+        if(root->next==NULL)
+            return NULL;
+        while(root->next!=NULL)
+        {
+            if(root->next->left!=NULL)
+                return root->next->left;
+            if(root->next->right!=NULL)
+                return root->next->right;
+            root=root->next;
+        }
+        return NULL;
+    }
+    
+    
+    Node* connect(Node* root) {
+        if(root==NULL)
+            return root;
+        if(root->left!=NULL)
+        {
+            if(root->right!=NULL)
+                root->left->next=root->right;
+            else
+                root->left->next=findnext(root);
+        }
+        if(root->right!=NULL)
+        {
+            root->right->next=findnext(root);
+        }
+        connect(root->right);
+        connect(root->left);
+        return root;
+    }
+};
+
+
+
+
+class Solution {
+public:
+    Node* connect(Node* root) {
+        Node* last = root;
+        while (last != nullptr) {
+            
+            while (last && last->left == nullptr && last->right == nullptr) last = last->next;
+            if (last == nullptr) break;
+            Node* cur = nullptr;
+            for (Node* i = last; i != nullptr; i = i -> next) {
+                if (i->left != nullptr) {
+                    if (cur != nullptr) {
+                        cur->next = i->left; 
+                    }
+                    cur = i->left;                   
+                }
+                
+                if (i->right != nullptr) {
+                    if (cur != nullptr) {
+                        cur->next = i->right;
+                    }
+                    cur = i->right;                    
+                }
+            }
+            
+            last = last->left ? last->left: last->right;
+        }
+        return root;
+    }
+};
+
+
+
