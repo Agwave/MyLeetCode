@@ -1,0 +1,103 @@
+给定一个整数数组，你需要寻找一个连续的子数组，如果对这个子数组进行升序排序，那么整个数组都会变为升序排序。
+
+你找到的子数组应是最短的，请输出它的长度。
+
+示例 1:
+
+输入: [2, 6, 4, 8, 10, 9, 15]
+输出: 5
+解释: 你只需要对 [6, 4, 8, 10, 9] 进行升序排序，那么整个表都会变为升序排序。
+说明 :
+
+输入的数组长度范围在 [1, 10,000]。
+输入的数组可能包含重复元素 ，所以升序的意思是<=。
+
+
+
+
+
+#################参考解答自答#######################
+# C++：6%
+class Solution {
+public:
+    int findUnsortedSubarray(vector<int>& nums) {
+        bool flag = false;
+        int max_num = INT_MIN, min_num = INT_MAX;
+        int l, r;
+        
+        if (nums.size() == 1) return 0;
+        
+        for (int i = 0; i < nums.size()-1; ++i) {
+            if (nums[i] > nums[i+1])
+                flag = true;
+            if (flag)
+                min_num = min(min_num, nums[i+1]);
+                cout << min_num << endl;
+        }
+      
+        
+        flag = false;
+        
+        for (int i = nums.size()-1; i > 0; --i) {
+            if (nums[i-1] > nums[i])
+                flag = true;
+            if (flag)
+                max_num = max(max_num, nums[i-1]);
+                cout << max_num << endl;
+        }
+        
+        for (l = 0; l < nums.size(); ++l) {
+            if (min_num < nums[l])
+                break;
+        }
+        
+        for (r = nums.size()-1; r >= 0; --r) {
+            if (max_num > nums[r])
+                break;
+        }
+        cout << l <<  r << endl;
+        return r - l < 0 ? 0 : r - l + 1;
+    }
+};
+
+
+
+
+
+
+########################参考解答###################
+# C++：
+class Solution {
+public:
+    //双指针  i从0->n-1  j从n-1->0
+    //start 指向第一个不是递减的
+    //end   指向最后一个不是递增的
+    // 如果发现不是递增  更新end = i
+    // 如果发现不是递减  更新start = j
+    int findUnsortedSubarray(vector<int>& nums) {
+        if(nums.empty()) return 0;
+        int n = (int)nums.size();
+        int maxVal = nums[0]; int minVal = nums[n-1];
+        //end = - 2当数组有序时  -2+1+1 = 0
+        int start = -1; int end = -2;
+        for (int i = 0; i < n; i++) {
+            int j = n - 1 - i;
+            maxVal = max(maxVal, nums[i]); //按照题意 最大值在最后面 i是递增的
+            minVal = min(minVal, nums[j]); //按照题意 最小值在最前面 j是递减的
+            if(nums[i] < maxVal){
+                //当前值小于历史最大值 不是递增
+                end = i;
+            }
+            if (nums[j] > minVal){
+                start = j;
+            }
+        }
+        return end - start + 1;
+    }
+};
+
+static int n=[](){
+    std::ios::sync_with_stdio(false);
+    std::cin.tie(nullptr);
+    return 0;
+}();
