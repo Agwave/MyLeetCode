@@ -1,0 +1,132 @@
+给定一个 N 叉树，返回其节点值的层序遍历。 (即从左到右，逐层遍历)。
+
+例如，给定一个 3叉树 :
+
+ 
+
+
+
+ 
+
+返回其层序遍历:
+
+[
+     [1],
+     [3,2,4],
+     [5,6]
+]
+ 
+
+说明:
+
+树的深度不会超过 1000。
+树的节点总数不会超过 5000。
+
+
+
+
+
+
+#####################自答#################
+# C++：81%
+/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    vector<Node*> children;
+
+    Node() {}
+
+    Node(int _val, vector<Node*> _children) {
+        val = _val;
+        children = _children;
+    }
+};
+*/
+class Solution {
+public:
+    vector<vector<int>> levelOrder(Node* root) {
+        vector<vector<int>> ret;
+        queue<Node*> q;
+        Node* node;
+        
+        if (root != nullptr)
+            q.push(root);
+        
+        while (!q.empty()) {
+            int length = q.size();
+            vector<int> temp;
+            for (int i = 0; i < length; ++i) {
+                node = q.front();
+                q.pop();
+                temp.push_back(node->val);
+                for (int j = 0; j < (node->children).size(); ++j)
+                    q.push((node->children)[j]);
+            }
+            ret.push_back(temp);
+        }
+        
+        return ret;
+    }
+};
+
+
+
+
+
+#################参考解答###############
+# C++：
+class Solution {
+public:
+    /*vector<vector<int>> levelOrder(Node* root) {
+        vector<vector<int>> vv;
+        if(root==nullptr){return vv;}
+        deque<Node*> s;
+        s.emplace_back(root);
+        int vvsize=0,cn=1;
+        while(cn!=0){
+            auto n=cn;
+            cn=0;
+            vv.resize(++vvsize);
+            vector<int> &v=vv.back();
+            v.reserve(n);
+            while(n-->0){
+                auto temp=s.front();
+                auto temp1=temp->children;
+                v.emplace_back(temp->val);
+                for(auto x:temp1){
+                    ++cn;
+                    s.emplace_back(x); 
+                }
+                s.pop_front();
+            }
+            
+        }
+        return vv;
+    }*/
+    vector<vector<int>> levelOrder(Node* root) 
+    {
+        if(!root)
+            return vector<vector<int>>{};
+        vector<vector<int>> result;
+        deque<Node*> tmp;
+        int cs=1;
+        tmp.push_back(root);
+        while(cs)
+        {
+            vector<int> it;
+            for(int x=0;x<cs;++x)
+            {
+                Node* p = tmp.front();
+                tmp.pop_front();
+                it.push_back(p->val);
+                for(auto x:p->children)
+                    tmp.push_back(x); 
+            }
+            result.push_back(it);
+            cs=tmp.size();
+        }
+        return result;
+    }
+};
