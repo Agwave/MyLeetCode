@@ -1,0 +1,147 @@
+给定一个非空二叉树, 返回一个由每层节点平均值组成的数组.
+
+示例 1:
+
+输入:
+    3
+   / \
+  9  20
+    /  \
+   15   7
+输出: [3, 14.5, 11]
+解释:
+第0层的平均值是 3,  第1层是 14.5, 第2层是 11. 因此返回 [3, 14.5, 11].
+注意：
+
+节点值的范围在32位有符号整数范围内。
+
+来源：力扣（LeetCode）
+链接：https://leetcode-cn.com/problems/average-of-levels-in-binary-tree
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+
+
+
+
+##########自答###########
+# python：5%
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+from queue import Queue
+
+class Solution:
+    def averageOfLevels(self, root: TreeNode) -> List[float]:
+        ret = []
+        q = Queue()
+        q.put(root)
+        while q.qsize() != 0:
+            sum_q = 0
+            size_q = q.qsize()
+            for i in range(size_q):
+                cur = q.get()
+                sum_q += cur.val
+                if cur.left is not None:
+                    q.put(cur.left)
+                if cur.right is not None:
+                    q.put(cur.right)
+            sum_q /= size_q
+            ret.append(sum_q)
+        return ret
+
+
+
+# C++:20%
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<double> averageOfLevels(TreeNode* root) {
+        vector<double> ret;
+        vector<TreeNode*> cur_layer = {root};
+        while (cur_layer.size() != 0) {
+            double sum = 0.0;
+            vector<TreeNode*> next_layer;
+            for (int i = 0; i < cur_layer.size(); i++) {
+                TreeNode *cur = cur_layer[i];
+                sum = sum + cur->val;
+                if (cur->left != nullptr)
+                    next_layer.push_back(cur->left);
+                if (cur->right != nullptr)
+                    next_layer.push_back(cur->right);
+            }
+            ret.push_back(sum/cur_layer.size());
+            cur_layer = next_layer;
+        }
+        return ret;
+    }
+};
+
+
+
+
+##########参考解答##########
+# python:
+class Solution:
+    def averageOfLevels(self, root: TreeNode) -> List[float]:
+        if not root:
+            return []                                 
+        cur_layer = [root]                            
+        res = []                                        # 结果列表，存放各层均值
+        while cur_layer:                         
+            # 将当前层结点平均值添加到结果中
+            res.append(sum(node.val for node in cur_layer) / len(cur_layer))
+            next_layer = []                             
+            for node in cur_layer:                      # 遍历上一层结点列表中的各个结点
+                if node.left:                           # 如果存在左子树
+                    next_layer.append(node.left)        # 添加左孩子到下一层列表
+                if node.right:                 
+                    next_layer.append(node.right) 
+            cur_layer = next_layer                      # 更新上一层结点列表
+        return res                                      # 返回结果列表
+        
+        
+        
+        
+# C++:
+class Solution {
+public:
+    vector<double> averageOfLevels(TreeNode* root) {
+        vector<double> res;
+        double sum = 0;
+        if(!root){
+		    return res;
+	    }
+        queue<TreeNode*> Q;
+        TreeNode* p;
+        Q.push(root);
+        while(Q.empty()==0){
+            sum = 0; 
+            int width=Q.size();
+            for(int i=0;i<width;i++){
+                p=Q.front();
+                
+                sum += p->val;
+                Q.pop();
+                if(p->left) Q.push(p->left);
+                if(p->right) Q.push(p->right);
+     
+            }
+            cout<<sum<<endl;
+             double avg = sum/width;
+             cout<<avg<<endl;
+             res.push_back(avg);
+        }
+    return res;       
+    }
+};
