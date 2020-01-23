@@ -1,0 +1,136 @@
+给定一个二叉树，返回所有从根节点到叶子节点的路径。
+
+说明: 叶子节点是指没有子节点的节点。
+
+示例:
+
+输入:
+
+   1
+ /   \
+2     3
+ \
+  5
+
+输出: ["1->2->5", "1->3"]
+
+解释: 所有根节点到叶子节点的路径为: 1->2->5, 1->3
+
+来源：力扣（LeetCode）
+链接：https://leetcode-cn.com/problems/binary-tree-paths
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+
+
+
+
+
+#############自答#############
+# python：55%
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def binaryTreePaths(self, root: TreeNode) -> List[str]:
+        ret = []
+        stack = []
+        if root is not None:
+            stack.append((root, str(root.val)))
+        while len(stack) > 0:
+            node, path = stack.pop()
+            if node.left is None and node.right is None:
+                ret.append(path)
+            else:
+                if node.left is not None:
+                    stack.append((node.left, path+"->"+str(node.left.val)))
+                if node.right is not None:
+                    stack.append((node.right, path+"->"+str(node.right.val)))
+        return ret
+        
+        
+        
+# C++：9%
+class Solution {
+public:
+    vector<string> binaryTreePaths(TreeNode* root) {
+        vector<string> ret;
+        stack<pair<TreeNode*, string>> stk;
+        if (root != nullptr)
+            stk.push(pair(root, to_string(root->val)));
+        while (stk.size() > 0) {
+            TreeNode *node = stk.top().first;
+            string path = stk.top().second;
+            stk.pop();
+            if (node->left == nullptr && node->right == nullptr)
+                ret.push_back(path);
+            else {
+                if (node->left != nullptr)
+                    stk.push(pair<TreeNode*, string>(node->left, path+"->"+to_string(node->left->val)));
+                if (node->right != nullptr)
+                    stk.push(pair<TreeNode*, string>(node->right, path+"->"+to_string(node->right->val)));
+            }
+        }
+        return ret;
+    }
+};
+
+
+#################参考解答############
+# python：
+class Solution:
+    def binaryTreePaths(self, root: TreeNode) -> List[str]:
+        if not root:
+            return []
+        stack = [[root, str(root.val)]]
+        res = []
+        while stack:
+            node, tmp = stack.pop()
+            if node.right:
+                stack += [[node.right, tmp+'->'+str(node.right.val)]]
+            if node.left:
+                stack += [[node.left, tmp+'->'+str(node.left.val)]]
+            if not node.left and not node.right:
+                res += [tmp]
+        return res
+        
+        
+
+
+# C++：
+class Solution {
+
+private:
+
+void dfs(TreeNode* root, vector<int> &path, vector<string> &ans) {
+    if (!root) return;
+
+    path.push_back(root->val);
+    if (root->left == NULL && root->right == NULL)
+        ans.push_back(getString(path));
+    dfs(root->left, path, ans);
+    dfs(root->right, path, ans);
+    path.pop_back();
+}
+
+string  getString(vector<int> &path) {
+    if (path.empty()) return "";
+    string ret;
+    for (int i = 0; i < path.size() - 1; ++i)
+        ret += to_string(path[i]) + "->";
+    ret += to_string(path[path.size() - 1]);
+    return ret;
+}
+
+
+
+public:
+    vector<string> binaryTreePaths(TreeNode* root) {
+        vector<string> ans;
+        vector<int> path;
+        dfs(root, path, ans);
+        return ans;
+    }
+};
