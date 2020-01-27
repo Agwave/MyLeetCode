@@ -1,0 +1,153 @@
+给定两个句子 A 和 B 。 （句子是一串由空格分隔的单词。每个单词仅由小写字母组成。）
+
+如果一个单词在其中一个句子中只出现一次，在另一个句子中却没有出现，那么这个单词就是不常见的。
+
+返回所有不常用单词的列表。
+
+您可以按任何顺序返回列表。
+
+ 
+
+示例 1：
+
+输入：A = "this apple is sweet", B = "this apple is sour"
+输出：["sweet","sour"]
+示例 2：
+
+输入：A = "apple apple", B = "banana"
+输出：["banana"]
+ 
+
+提示：
+
+0 <= A.length <= 200
+0 <= B.length <= 200
+A 和 B 都只包含空格和小写字母。
+
+来源：力扣（LeetCode）
+链接：https://leetcode-cn.com/problems/uncommon-words-from-two-sentences
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+
+
+
+
+
+################自答##############
+# python：18%
+class Solution:
+    def uncommonFromSentences(self, A: str, B: str) -> List[str]:
+        ret = []
+        dictA, dictB = dict(), dict()
+        for a in A.split():
+            if a not in dictA:
+                dictA[a] = 1
+            else:
+                dictA[a] += 1
+        for b in B.split():
+            if b not in dictB:
+                dictB[b] = 1
+            else:
+                dictB[b] += 1
+        for a in dictA.keys():
+            if dictA[a] == 1 and a not in dictB.keys():
+                ret.append(a)
+        for b in dictB.keys():
+            if dictB[b] == 1 and b not in dictA.keys():
+                ret.append(b)
+        return ret
+
+
+
+
+# C++：90%
+class Solution {
+public:
+    vector<string> uncommonFromSentences(string A, string B) {
+        vector<string> ret;
+        vector<string> temp;
+        map<string, int> m;
+        vector<string> vecA = split(A, " ");
+        vector<string> vecB = split(B, " ");
+        temp.insert(temp.end(), vecA.begin(), vecA.end());
+        temp.insert(temp.end(), vecB.begin(), vecB.end());
+        for (int i = 0; i < temp.size(); i++) {
+            m[temp[i]]++;
+        }
+        map<string, int>::iterator iter;
+        for (iter = m.begin(); iter != m.end(); iter++) {
+            if (iter->second == 1)
+                ret.push_back(iter->first);
+        }
+        return ret;
+    }
+    
+private:
+    vector<string> split(string str, string delim) {
+        vector<string> ret;
+        if (str.size() == 0)
+            return ret;
+        string strs = str + delim;
+        size_t pos;
+        size_t size = strs.size();
+        for (int i = 0; i < size; i++) {
+            pos = strs.find(delim, i);
+            if (pos < size) {
+                string temp = strs.substr(i, pos-i);
+                ret.push_back(temp);
+                i = pos + delim.size() - 1;
+            }
+        }
+        return ret;
+    }
+};
+
+
+
+
+#################参考解答##############
+# python：
+class Solution:
+    def uncommonFromSentences(self, A: str, B: str) -> List[str]:
+        l_w = A.split(' ') + B.split(' ')
+        hm_a = {}
+        for w in l_w:
+            if w not in hm_a.keys():
+                hm_a[w] = 1
+            else:
+                hm_a[w] += 1
+        l = []
+        for k, v in hm_a.items():
+            if v < 2:
+                l.append(k)
+        return l
+
+
+
+# C++：
+class Solution {
+public:
+    vector<string> uncommonFromSentences(string A, string B) {
+        vector<string> ret;
+        map<string, int> frA;
+        map<string, int> frB;
+        stringstream ss(A);
+        string word = "";
+        while(ss >> word) {
+            frA[word]++;
+        }
+        ss.clear();
+        ss.str(B);
+        while(ss >> word) {
+            frB[word]++;
+        }
+        for(auto i : frA) {
+            if(i.second == 1 && frB.count(i.first) == 0)
+                ret.push_back(i.first);
+        }
+        for(auto i : frB) {
+            if(i.second == 1 && frA.count(i.first) == 0)
+                ret.push_back(i.first);
+        }
+        return ret;
+    }
+};
