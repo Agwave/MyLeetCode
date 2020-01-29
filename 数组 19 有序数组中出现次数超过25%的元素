@@ -1,0 +1,100 @@
+给你一个非递减的 有序 整数数组，已知这个数组中恰好有一个整数，它的出现次数超过数组元素总数的 25%。
+
+请你找到并返回这个整数
+
+ 
+
+示例：
+
+输入：arr = [1,2,2,6,6,6,6,7,10]
+输出：6
+ 
+
+提示：
+
+1 <= arr.length <= 10^4
+0 <= arr[i] <= 10^5
+
+
+来源：力扣（LeetCode）
+链接：https://leetcode-cn.com/problems/element-appearing-more-than-25-in-sorted-array
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+
+
+
+
+#################自答###############
+# python：64%
+class Solution:
+    def findSpecialInteger(self, arr: List[int]) -> int:
+        ret = arr[0]
+        cnt = int(len(arr) / 4)
+        m = {}
+        for num in arr:
+            if num not in m:
+                m[num] = 1
+            else: 
+                m[num] += 1
+                if m[num] > cnt:
+                    ret = num
+        return ret
+
+
+
+# C++：
+class Solution {
+public:
+    int findSpecialInteger(vector<int>& arr) {
+        int slow = 0;
+        int fast = arr.size() / 4;
+        while (arr[slow] != arr[fast]) {
+            slow++;
+            fast++;
+        }
+        return arr[slow];
+    }
+};
+
+
+
+###############参考解答#################
+# python：
+class Solution:
+    def findSpecialInteger(self, arr: List[int]) -> int:
+        cur = arr[0]
+        count=0
+        n=len(arr)
+        for i in range(n):
+            if arr[i] == cur:
+                count+=1
+                if count*4>n:
+                    return arr[i]
+            else:
+                cur = arr[i]
+                count =1
+
+
+
+# C++：
+class Solution {
+public:
+    int findSpecialInteger(vector<int>& arr) {
+        // if(arr.size() == 0)return 0;
+        int cur = 0, cnt = 0, n = arr.size()/4;
+        for(int i = 0;i<arr.size();++i)
+        {
+            if(cur == arr[i])
+            {
+                if(++cnt > n)return cur;
+            }
+            else
+            {
+                cur = arr[i];
+                cnt = 1;
+            }
+        }
+        // std::cout<<cnt<<"\t"<<n<<std::endl;
+        if(cnt > n)return cur;
+        return 0;
+    }
+};
