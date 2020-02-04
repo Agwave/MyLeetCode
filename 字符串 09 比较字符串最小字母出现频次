@@ -1,0 +1,100 @@
+我们来定义一个函数 f(s)，其中传入参数 s 是一个非空字符串；该函数的功能是统计 s  中（按字典序比较）最小字母的出现频次。
+
+例如，若 s = "dcce"，那么 f(s) = 2，因为最小的字母是 "c"，它出现了 2 次。
+
+现在，给你两个字符串数组待查表 queries 和词汇表 words，请你返回一个整数数组 answer 作为答案，其中每个 answer[i] 是满足 f(queries[i]) < f(W) 的词的数目，W 是词汇表 words 中的词。
+
+ 
+
+示例 1：
+
+输入：queries = ["cbd"], words = ["zaaaz"]
+输出：[1]
+解释：查询 f("cbd") = 1，而 f("zaaaz") = 3 所以 f("cbd") < f("zaaaz")。
+示例 2：
+
+输入：queries = ["bbb","cc"], words = ["a","aa","aaa","aaaa"]
+输出：[1,2]
+解释：第一个查询 f("bbb") < f("aaaa")，第二个查询 f("aaa") 和 f("aaaa") 都 > f("cc")。
+ 
+
+提示：
+
+1 <= queries.length <= 2000
+1 <= words.length <= 2000
+1 <= queries[i].length, words[i].length <= 10
+queries[i][j], words[i][j] 都是小写英文字母
+
+来源：力扣（LeetCode）
+链接：https://leetcode-cn.com/problems/compare-strings-by-frequency-of-the-smallest-character
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+
+
+
+
+###############自答#############
+# python：98%
+class Solution:
+    def numSmallerByFrequency(self, queries: List[str], words: List[str]) -> List[int]:
+        dic = {'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5, 'g': 6,
+          'h': 7, 'i': 8, 'j': 9, 'k': 10, 'l': 11, 'm': 12, 'n': 13,
+          'o': 14, 'p': 15, 'q': 16, 'r': 17, 's': 18, 't': 19, 'u': 20,
+          'v': 21, 'w': 22, 'x': 23, 'y': 24, 'z': 25}
+        def f(s):
+            alpha = [0] * 26
+            num = -1
+            for c in s:
+                alpha[dic[c]] += 1
+            for a in alpha:
+                if a != 0:
+                    num = a
+                    break
+            return num
+        ret = []
+        q_list = list(map(f, queries))
+        w_list = list(map(f, words))
+        w_help = [0] * 11
+        for w in w_list:
+            for i in range(1, w):
+                w_help[i] += 1
+        for q in q_list:
+            ret.append(w_help[q])
+        return ret
+
+
+
+
+#############参考解答############
+# python：
+class Solution:
+    def numSmallerByFrequency(self, queries: List[str], words: List[str]) -> List[int]:
+        answer = []
+
+        words_dict = {}
+        for word in words:
+            word_dict = [word[0], 1]
+            for letter in word[1:len(word)]:
+                if letter < word_dict[0]:
+                    word_dict = [letter, 1]
+                    continue
+                elif letter == word_dict[0]:
+                    word_dict[1] += 1
+            if word_dict[1] not in words_dict:
+                words_dict[word_dict[1]] = 1
+            else:
+                words_dict[word_dict[1]] += 1
+
+        for query in queries:
+            query_dict = [query[0], 1]
+            for letter in query[1:len(query)]:
+                if letter < query_dict[0]:
+                    query_dict = [letter, 1]
+                    continue
+                elif letter == query_dict[0]:
+                    query_dict[1] += 1
+            tmp_len = 0
+            for item in words_dict:
+                if item > query_dict[1]:
+                    tmp_len += words_dict[item]
+            answer.append(tmp_len)
+        return answer
