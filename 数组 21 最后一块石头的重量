@@ -1,0 +1,205 @@
+有一堆石头，每块石头的重量都是正整数。
+
+每一回合，从中选出两块最重的石头，然后将它们一起粉碎。假设石头的重量分别为 x 和 y，且 x <= y。那么粉碎的可能结果如下：
+
+如果 x == y，那么两块石头都会被完全粉碎；
+如果 x != y，那么重量为 x 的石头将会完全粉碎，而重量为 y 的石头新重量为 y-x。
+最后，最多只会剩下一块石头。返回此石头的重量。如果没有石头剩下，就返回 0。
+
+ 
+
+提示：
+
+1 <= stones.length <= 30
+1 <= stones[i] <= 1000
+
+
+来源：力扣（LeetCode）
+链接：https://leetcode-cn.com/problems/last-stone-weight
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+
+
+
+#################自答###############
+# python：34%
+class Solution:
+    def lastStoneWeight(self, stones: List[int]) -> int:
+        stones.sort(reverse=True)
+        link = LinkedList()
+        for stone in stones:
+            link.append(stone)
+        while link.size > 1:
+            heavy_sto = link.pop()
+            light_sto = link.pop()
+            if heavy_sto != light_sto:
+                link.sort_in(heavy_sto-light_sto)
+        return link.final.val if link.size == 1 else 0
+        
+
+class Node:
+    def __init__(self, x):
+        self.val = x
+        self.next = None
+        
+
+class LinkedList:
+    def __init__(self):
+        self._head = Node(0)
+        self.size = 0
+        self.final = self._head
+    
+    def is_empty(self):
+        return self.size == 0
+    
+    def append(self, x):
+        cur = Node(x)
+        self.size += 1
+        self.final.next = cur
+        self.final = cur
+    
+    def pop(self):
+        if self.is_empty():
+            return None
+        else:
+            node = self._head.next
+            self._head.next = node.next
+            self.size -= 1
+            if self.size == 0:
+                self.final = self._head
+            return node.val
+        
+    
+    def sort_in(self, x):
+        cur = self._head
+        size = self.size
+        while cur.next:
+            if x < cur.next.val:
+                cur = cur.next
+            else:
+                node = Node(x)
+                node.next = cur.next
+                cur.next = node
+                self.size += 1
+                break
+        if size == self.size:
+            cur.next = Node(x)
+            self.final = cur.next
+            self.size += 1
+    
+    def view(self):
+        cur = self._head
+        ret = []
+        while cur:
+            ret.append(cur.val)
+            cur = cur.next
+        print(ret)
+
+
+
+
+# C++：100%
+class Solution {
+public:
+    int lastStoneWeight(vector<int>& stones) {
+        make_heap(stones.begin(), stones.end(), less<int>());
+        int heavy, light;
+        while (stones.size() > 1) {
+            pop_heap(stones.begin(), stones.end(), less<int>());
+            heavy = stones.back();
+            stones.pop_back();
+            pop_heap(stones.begin(), stones.end(), less<int>());
+            light = stones.back();
+            stones.pop_back();
+            if (heavy != light) {
+                stones.push_back(heavy-light);
+                push_heap(stones.begin(), stones.end(), less<int>());
+            }
+        }
+        if (stones.size() == 1)
+            return stones.back();
+        else
+            return 0;
+    }
+};
+
+
+
+
+###############参考解答#################
+# python：
+
+class Solution:
+    def lastStoneWeight(self, stones: List[int]) -> int:
+        neg_stones=[]
+        for i in stones:
+            neg_stones.append(-i)
+        heapq.heapify(neg_stones)
+        while len(neg_stones)>1:
+            list1=heapq.nsmallest(2,neg_stones)
+            heapq.heappop(neg_stones)
+            heapq.heappop(neg_stones)
+            if list1[0] == list1[1]:
+                continue
+            else:
+                newstone=(list1[0]-list1[1])
+            heapq.heappush(neg_stones,newstone)
+        if  len(neg_stones) == 0:
+            return 0
+        else:
+            return -neg_stones[0]
+
+
+
+# C++：
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+#define minus(a, b) a > b ? a - b : b - a
+
+class Solution {
+public:
+    int lastStoneWeight(vector<int>& stone) {
+        make_heap(begin(stone), end(stone));
+	    while(1){
+		    int temp1 = 0;
+		    int temp2 = 0;
+		    int res;
+		    if(!stone.empty()){
+		    	temp1 = stone[0];
+		    	//cout << "temp1=" << temp1 << endl;
+		     	pop_heap(begin(stone), end(stone));
+		     	stone.pop_back();
+		    }
+
+		    else{
+		    	return 0;
+		    }
+		    //一个都没有了的情况
+
+		    if(!stone.empty()){
+		    	temp2 = stone[0];
+		    	//cout << "temp2=" << temp2 << endl;
+		     	pop_heap(begin(stone), end(stone));
+		     	stone.pop_back();
+		    }
+
+		    else{
+		    	return temp1;
+		    }
+		    //还有最后一个的情况
+		    if(temp1 == temp2){
+		    	continue;
+		    }
+		    else{
+		    	res = minus(temp1, temp2);
+		    	stone.push_back(res);
+		    	push_heap(begin(stone), end(stone));
+		    }
+//		    for(int i = 0; i < stone.size(); i++){
+//		    	cout << "stone[i]=" << stone[i] << endl;
+//		    }
+		    //cout << endl;
+	    }
+    }
+};
