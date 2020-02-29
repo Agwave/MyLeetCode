@@ -1,0 +1,94 @@
+#################自答###############
+# python：90%
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    def getDecimalValue(self, head: ListNode) -> int:
+        ret = 0
+        p = head
+        while p:
+            ret = ret * 2 + p.val
+            p = p.next
+        return ret
+
+
+
+# C++：100%
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int getDecimalValue(ListNode* head) {
+        int ret = 0;
+        ListNode* p = head;
+        while (p != nullptr) {
+            ret = ret * 2 + p->val;
+            p = p->next;
+        }
+        return ret;
+    }
+};
+
+
+
+
+###############参考解答#################
+# python：
+class Solution:
+    def getDecimalValue(self, head: ListNode) -> int:
+        dummyHead = ListNode(-1)
+        dummyHead.next = head
+        count = 0
+        while head:
+            count += 1
+            head = head.next
+        res = 0
+        while dummyHead.next:
+            res += 2**(count-1) * dummyHead.next.val
+            dummyHead = dummyHead.next
+            count -= 1
+        return res
+
+
+
+# C++：
+class Solution {
+public:
+    int getDecimalValue(ListNode* head) {
+        if(head==NULL) return 0;
+        ListNode* curhead=head;   
+        int node_num=0;
+        int sum=0;
+        while(curhead!=NULL)     //判断当前结点不为空
+        {
+          node_num++;    
+          curhead=curhead->next;
+        }
+        if(node_num>30)
+        {
+            return 0;
+        }
+        else
+        {
+         for(int i=node_num;i>=1;i--)
+         {
+           if(head!=NULL)
+           {
+            sum+=head->val<<(i-1);
+            head=head->next;
+           }
+         }
+        }
+        return sum;
+    }
+};
